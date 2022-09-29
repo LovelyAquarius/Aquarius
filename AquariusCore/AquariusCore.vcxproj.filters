@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Vendor">
+      <UniqueIdentifier>{935FDCD7-7F01-07AE-68BC-1A0254FD8DFE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\OpenGL">
+      <UniqueIdentifier>{676585E2-D325-0119-9C60-4A9608E045F5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\OpenGL\GLAD">
+      <UniqueIdentifier>{4E986ACA-3A7C-2B20-A3DC-25738FDF15A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{76FF3A1C-62A1-65F2-4B5C-7946379DEC42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Data">
+      <UniqueIdentifier>{9F8EACBA-0B44-25B0-9438-1F8700ED1BB4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Data\3DObiects">
+      <UniqueIdentifier>{4EC679A4-BA32-359F-8326-CDFCEF515707}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Data\3DObiects\MathModel">
+      <UniqueIdentifier>{F8C724CC-64AB-330C-6DAE-6148D910FA5C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\EventSystem">
+      <UniqueIdentifier>{2C263A74-180A-FBC9-816A-F51C6D6DE54B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Platform">
+      <UniqueIdentifier>{8A00977C-F68B-0441-FF9C-87356BA76041}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Platform\AQOpenGL">
+      <UniqueIdentifier>{F0C2513F-DCE7-A0BF-0533-864FF1B69FDD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Platform\Windows">
+      <UniqueIdentifier>{C494B974-30CC-010C-39D6-652FA58C2805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Renderer">
+      <UniqueIdentifier>{DC077457-4893-E11B-51A4-6410BDAE3D1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\UISystem">
+      <UniqueIdentifier>{C8506373-34DC-D037-3DED-532CA9F72C38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\UISystem\AQGUI">
+      <UniqueIdentifier>{0E1987FA-7A85-42F5-4379-DA52AFA4645D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\UISystem\IMGUILayer">
+      <UniqueIdentifier>{0F3E806C-FB4D-2C3D-6407-915B50361BD6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils">
+      <UniqueIdentifier>{56417C11-42A4-0BB6-EB29-446CD76BD738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils\AQGeometry">
+      <UniqueIdentifier>{634F5D36-CF86-A5CD-D890-09F14447CCC6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\core">
+      <UniqueIdentifier>{AEC9BDBA-1A7F-36B0-A373-30870F282DB4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\AQPCH.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Data\3DObiects\MathModel\ThreeDModel.h">
+      <Filter>source\Data\3DObiects\MathModel</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EventSystem\ApplicationEvent.h">
+      <Filter>source\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EventSystem\EventSystem.h">
+      <Filter>source\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EventSystem\KeyEvent.h">
+      <Filter>source\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\EventSystem\MouseEvent.h">
+      <Filter>source\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\AQGLBuffer.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\AQGLContext.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\AQGLShader.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\AQGLTexture.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\GLError.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\OpenGLRenderAPI.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\Windows\WindowsInput.h">
+      <Filter>source\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\Windows\WindowsWindow.h">
+      <Filter>source\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\AQBuffer.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\AQBufferLayout.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\OrthgraphicCamera.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\RenderAPI.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\RenderCommand.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\Renderer.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UISystem\AQGUI\AQGUI.h">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UISystem\AQGUI\AQLayout.h">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UISystem\AQGUI\AQWidget.h">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UISystem\AQGUI\UICursor.h">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="source\UISystem\IMGUILayer\IMGUI.h">
+      <Filter>source\UISystem\IMGUILayer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\AQGeometry\AQEuclidian2D.h">
+      <Filter>source\Utils\AQGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\AQGeometry\Transform2D.h">
+      <Filter>source\Utils\AQGeometry</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\APPGUI.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\AQCommon.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\AQObject.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Application.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\AquariusCore.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\GraphicContext.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Input.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\KeyCode.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Layer.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\LayerStack.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Log.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\Window.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+    <ClInclude Include="source\core\entrypoint.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Vendor\OpenGL\GLAD\glad.c">
+      <Filter>Vendor\OpenGL\GLAD</Filter>
+    </ClCompile>
+    <ClCompile Include="source\AQPCH.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Data\3DObiects\MathModel\ThreeDModel.cpp">
+      <Filter>source\Data\3DObiects\MathModel</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\AQGLBuffer.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\AQGLContext.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\AQGLShader.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\AQGLTexture.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\GLError.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\OpenGLRenderAPI.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\Windows\WindowsInput.cpp">
+      <Filter>source\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\Windows\WindowsWindow.cpp">
+      <Filter>source\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\AQBuffer.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\AQBufferLayout.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\OrthgraphicCamera.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\RenderAPI.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\RenderCommand.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\Renderer.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UISystem\AQGUI\AQGUI.cpp">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UISystem\AQGUI\AQLayout.cpp">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UISystem\AQGUI\AQWidget.cpp">
+      <Filter>source\UISystem\AQGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="source\UISystem\IMGUILayer\IMGUI.cpp">
+      <Filter>source\UISystem\IMGUILayer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\AQGeometry\AQEuclidian2D.cpp">
+      <Filter>source\Utils\AQGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\AQGeometry\Transform2D.cpp">
+      <Filter>source\Utils\AQGeometry</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\APPGUI.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\AQCommon.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\AQObject.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\Application.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\Layer.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\LayerStack.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+    <ClCompile Include="source\core\Log.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

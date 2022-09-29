@@ -1,0 +1,13 @@
+#Directories
+bin/
+bin-inter/
+.vscode/
+.vs/
+#Files
+*.sln
+Aquarius/*.vcxproj
+Aquarius/*.user
+AquariusCore/*.vcxproj
+AquariusCore/*.user
+*.vcxproj
+*.user
