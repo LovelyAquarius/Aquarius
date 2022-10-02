@@ -1,5 +1,4 @@
 #pragma once
-
 #include "AquariusCore.h"
 #include<utility>
 namespace Aquarius

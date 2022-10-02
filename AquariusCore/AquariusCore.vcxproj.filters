@@ -10,6 +10,9 @@
     <Filter Include="Vendor\OpenGL\GLAD">
       <UniqueIdentifier>{4E986ACA-3A7C-2B20-A3DC-25738FDF15A2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vendor\stb_image">
+      <UniqueIdentifier>{EDE315D3-D9DC-3425-020F-1AAAEE661431}</UniqueIdentifier>
+    </Filter>
     <Filter Include="source">
       <UniqueIdentifier>{76FF3A1C-62A1-65F2-4B5C-7946379DEC42}</UniqueIdentifier>
     </Filter>
@@ -105,6 +108,12 @@
     <ClInclude Include="source\Renderer\AQBufferLayout.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="source\Renderer\AQShader.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\AQTexture.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="source\Renderer\OrthgraphicCamera.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
@@ -171,16 +180,24 @@
     <ClInclude Include="source\core\Log.h">
       <Filter>source\core</Filter>
     </ClInclude>
+    <ClInclude Include="source\core\TimeSystem.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\Window.h">
       <Filter>source\core</Filter>
     </ClInclude>
     <ClInclude Include="source\core\entrypoint.h">
       <Filter>source\core</Filter>
     </ClInclude>
+    <ClInclude Include="source\Utils\AQMonitor\AQMonitor.h" />
+    <ClInclude Include="source\Renderer\OrthgraphicCameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Vendor\OpenGL\GLAD\glad.c">
       <Filter>Vendor\OpenGL\GLAD</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Vendor\stb_image\stb_image.cpp">
+      <Filter>Vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="source\AQPCH.cpp">
       <Filter>source</Filter>
@@ -216,6 +233,12 @@
       <Filter>source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="source\Renderer\AQBufferLayout.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\AQTexture.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\AQshader.cpp">
       <Filter>source\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="source\Renderer\OrthgraphicCamera.cpp">
@@ -269,5 +292,7 @@
     <ClCompile Include="source\core\Log.cpp">
       <Filter>source\core</Filter>
     </ClCompile>
+    <ClCompile Include="source\Utils\AQMonitor\AQMonitor.cpp" />
+    <ClCompile Include="source\Renderer\OrthgraphicCameraController.cpp" />
   </ItemGroup>
 </Project>

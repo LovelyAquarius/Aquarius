@@ -1,5 +1,6 @@
 #pragma once
 #include "AquariusCore.h"
+#include "core/TimeSystem.h"
 #include "EventSystem/EventSystem.h"
 
 namespace Aquarius
@@ -13,8 +14,8 @@ namespace Aquarius
 
 		virtual void  OnAttach() {}
 		virtual void  OnDetach() {}
-		virtual void  OnUpdate() {}
-		virtual void OnImGuiRender(){}
+		virtual void  OnUpdate(DeltaTime& dt) {}
+		virtual void  OnImGuiRender(){}
 		virtual void	 OnRender(){}
 
 		virtual void  OnEvent(BaseEvent& event) {}

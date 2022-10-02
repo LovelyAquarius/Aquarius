@@ -8,11 +8,7 @@
 namespace Aquarius
 {
 
-
-
-
-
-	AQVertexBuffer* AQVertexBuffer::Create(int datasize, const void* data, int datahandledtype)
+	AQRef<AQVertexBuffer> AQVertexBuffer::Create(int datasize, const void* data, int datahandledtype)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -22,10 +18,10 @@ namespace Aquarius
 			return new AQGLVertexBuffer(datasize, data, datahandledtype);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return nullptr;
+		return AQRef<AQVertexBuffer>();
 	}
 
-	AQVertexBuffer* AQVertexBuffer::Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent)
+	AQRef<AQVertexBuffer> AQVertexBuffer::Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -35,10 +31,10 @@ namespace Aquarius
 			return new AQGLVertexBuffer(datasize, data, datahandledtype, (AQGLVertexArray&)parent);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return nullptr;
+		return AQRef<AQVertexBuffer>();
 	}
 
-	AQElementBuffer* AQElementBuffer::Create(int datasize, const void* data, int datahandledtype)
+	AQRef<AQElementBuffer> AQElementBuffer::Create(int datasize, const void* data, int datahandledtype)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -48,10 +44,10 @@ namespace Aquarius
 			return new AQGLElementBuffer(datasize, data, datahandledtype);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return nullptr;
+		return AQRef<AQElementBuffer>();
 	}
 
-	AQElementBuffer* AQElementBuffer::Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent)
+	AQRef<AQElementBuffer> AQElementBuffer::Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -61,10 +57,10 @@ namespace Aquarius
 			return new AQGLElementBuffer(datasize, data, datahandledtype, (AQGLVertexArray&)parent);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return nullptr;
+		return AQRef<AQElementBuffer>();
 	}
 
-	AQVertexArray* AQVertexArray::Create(AQBufferLayout& layout)
+	AQRef<AQVertexArray>  AQVertexArray::Create(AQBufferLayout& layout)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -74,7 +70,7 @@ namespace Aquarius
 			return new AQGLVertexArray(layout);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return nullptr;
+		return AQRef<AQVertexArray>();
 	}
 
 

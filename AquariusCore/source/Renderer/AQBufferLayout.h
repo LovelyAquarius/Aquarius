@@ -1,4 +1,5 @@
 #pragma once
+#include "core/AquariusCore.h"
 #include <vector>
 #include <GLAD/glad.h>
 #include "core/Log.h"
@@ -24,8 +25,7 @@ namespace Aquarius
 		BufferDataType Type ;
 		bool Normalized;
 		uint32_t Offset ;
-		uint32_t Count;
-
+		uint32_t Count;  //总数据量
 
 		BufferElement(){};
 			
@@ -112,21 +112,27 @@ namespace Aquarius
 			
 
 	public:
-		inline const uint32_t GetStride()const { return m_Stride; };
-		inline const std::vector<BufferElement>& GetElements()const { return m_Elements; };
+		 const uint32_t GetStride()const { return m_Stride; };
+		 const std::vector<BufferElement>& GetElements()const { return m_Elements; };
+
 
 		std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
 		std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
 		std::vector<BufferElement>::const_iterator begin() const { return m_Elements.begin(); }
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
-
+	public:	
 		void CalculateCount(int datasize);
+		void SetIndex(unsigned int indexcount);
+		const uint32_t& GetIndex()const { return m_IndexToDraw; }
+
 	private:
 		void CalculateOffsetAndStride();
-		
+	
+
 
 	private:
 		uint32_t m_Stride;
+		uint32_t m_IndexToDraw;
 		std::vector<BufferElement> m_Elements;
 		
 	};

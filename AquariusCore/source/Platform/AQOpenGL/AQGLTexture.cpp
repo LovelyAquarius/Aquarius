@@ -11,36 +11,18 @@ namespace Aquarius
 
 {
 
-	AQGLTexture2D::AQGLTexture2D(const char*& filename, GLsizei colorType, GLsizei textureUnit)
-		:m_Texture(1)
+	AQGLTexture2D::AQGLTexture2D(const char* filename)
+		:m_Texture(0)
 	{
-		GLsizei width;
-		GLsizei height;
-		GLsizei nrChannels;
-
 		GLCALL(glGenTextures(1, &m_Texture));
-		GLCALL(glActiveTexture(textureUnit));
 		SetAttributes();
-
-		stbi_set_flip_vertically_on_load(true);
-		unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, 0);
-		AQ_CORE_ASSERT(data, "reading texture2d picture has failed!");
-
-
-		GenerateImage(width, height, colorType, data);
-		stbi_image_free(data);
-
+		Load(filename);
 	}
 
-	AQGLTexture2D::AQGLTexture2D(const unsigned char* data, GLsizei width, GLsizei height, GLsizei colorType, GLsizei textureUnit)
-		:m_Texture(1)
-
+	AQGLTexture2D::AQGLTexture2D()
+		:m_Texture(0)
 	{
 		GLCALL(glGenTextures(1, &m_Texture));
-		GLCALL(glActiveTexture(textureUnit));
-		Bind();
-
-		GenerateImage(width, height, colorType, data);
 	}
 
 	AQGLTexture2D::AQGLTexture2D(AQGLTexture2D&& other) noexcept
@@ -79,10 +61,6 @@ namespace Aquarius
 		GLCALL(glDeleteTextures(1, &m_Texture));
 	}
 
-	void AQGLTexture2D::GenerateImage(GLsizei width, GLsizei height, GLsizei colorType, const unsigned char* data)
-	{
-		GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, colorType, width, height, 0, colorType, GL_UNSIGNED_BYTE, data));
-	}
 
 	void AQGLTexture2D::SetAttributes(GLsizei WRAP_S_ATTR, GLsizei WRAP_T_ATTR, GLsizei MIN_FILTER_ATTR, GLsizei MAG_FILTER_ATTR)
 	{
@@ -98,6 +76,32 @@ namespace Aquarius
 	{
 		GLCALL(glActiveTexture(textureUnit));
 		GLCALL(glBindTexture(GL_TEXTURE_2D, m_Texture));
+	}
+
+	void AQGLTexture2D::Load(const char* filename)
+	{
+		//读取数据
+		stbi_set_flip_vertically_on_load(true);
+		unsigned char* data = stbi_load(filename, &m_Width, &m_Height, &m_nrChannels, 0);
+		AQ_CORE_ASSERT(data, "Reading texture2d file has failed!");
+		GLenum internalformat = 0;
+		GLenum dataformat = 0;
+		if (m_nrChannels == 3)
+		{
+			internalformat = GL_RGB8;
+			dataformat = GL_RGB;
+		}
+		else if(m_nrChannels==4)
+		{
+			internalformat = GL_RGBA8;
+			dataformat = GL_RGBA;
+		}
+		AQ_CORE_ASSERT(internalformat & dataformat, "Unsuported channel type!");
+		GLCALL(glBindTexture(GL_TEXTURE_2D, m_Texture));
+		GLCALL(glTextureStorage2D(m_Texture, 1, internalformat, m_Width, m_Height));
+		GLCALL(glTextureSubImage2D(m_Texture, 0, 0, 0, m_Width, m_Height, dataformat, GL_UNSIGNED_BYTE, data));
+		stbi_image_free(data);
+		//___________________________
 	}
 
 	void Mipmap(GLsizei textureUnit)

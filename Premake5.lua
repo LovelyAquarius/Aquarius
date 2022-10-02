@@ -31,7 +31,8 @@ project "AquariusCore"
     {
         "%{prj.name}/source/**.h",
         "%{prj.name}/source/**.cpp",
-        "Vendor/OpenGL/GLAD/glad.c"
+        "Vendor/OpenGL/GLAD/glad.c",
+        "Vendor/stb_image/stb_image.cpp"
     }
 
     includedirs

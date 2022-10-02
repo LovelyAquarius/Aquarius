@@ -1,11 +1,6 @@
 #pragma once
-
 #include <GLAD/glad.h>
 #include "core/Log.h"
-
-
-
-
 
 namespace Aquarius
 {

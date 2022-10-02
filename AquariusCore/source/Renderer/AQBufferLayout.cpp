@@ -5,7 +5,7 @@ namespace Aquarius
 {
 
 	AQBufferLayout::AQBufferLayout(const std::initializer_list<BufferElement>& elements)
-		:m_Elements(elements)
+		:m_Elements(elements),m_IndexToDraw(0)
 	{
 		CalculateOffsetAndStride();
 	}
@@ -64,6 +64,11 @@ namespace Aquarius
 			}
 		}
 
+	}
+
+	void AQBufferLayout::SetIndex(unsigned int indexcount)
+	{
+		m_IndexToDraw = indexcount;
 	}
 
 

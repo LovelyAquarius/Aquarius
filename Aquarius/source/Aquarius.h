@@ -1,25 +1,27 @@
 #pragma once
+//___________________
 #include<string.h>
+//___________________
 //核心组件
 #include "core/Application.h"
 #include "core/Log.h"
-//_____________________-
-
-
+#include "core/AQObject.h"
+#include "core/TimeSystem.h"
+#include "EventSystem/ApplicationEvent.h"
+#include "EventSystem/KeyEvent.h"
+#include "EventSystem/MouseEvent.h"
+//______________________
 //渲染组件
-#include "Renderer/OrthgraphicCamera.h"
+#include "Renderer/OrthgraphicCameraController.h"
 #include "Renderer/AQBufferLayout.h"
 #include "Platform/AQOpenGL/AQGLShader.h"
 #include "Renderer/AQBuffer.h"
 #include "Renderer/Renderer.h"
 #include "Platform/AQOpenGL/AQGLTexture.h"
 #include "Data/3DObiects/MathModel/ThreeDModel.h"
+#include "imgui.h"
 #include <GLFW/glfw3.h>
 //_____________________________
-
-#include "IMGUI/imgui.h"
-#include "backends/imgui_impl_opengl3.h"
-
 //程序入口
 #include "core/entrypoint.h"
 //_____________________________________

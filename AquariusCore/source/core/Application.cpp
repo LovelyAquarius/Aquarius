@@ -1,11 +1,10 @@
 #pragma once
 #include"AQPCH.h"
-
-#include "APPGUI.h"
 #include "Application.h"
+#include "APPGUI.h"
 #include "Platform/AQOpenGL/GLError.h"
-#include "Renderer/RenderCommand.h"
-#include"Platform/AQOpenGL/AQGLShader.h"
+#include "Renderer/Renderer.h"
+#include "Utils/AQMonitor/AQMonitor.h"
 #include <GLFW/glfw3.h>
 namespace Aquarius
 {
@@ -20,12 +19,20 @@ namespace Aquarius
 		//所有事件在这里触发
 		m_Window->SetEventCallBack(AQ_BIND_EVENT_FN(Application::OnEvent));
 		//_______________________________________
-		
-
+		//初始化渲染器
+		Renderer::Init();
+		//_______________________________________
 		//创建appgui实例
 		m_GUI = APPGUI::GetAPPGUI();
 		PushOverLay(m_GUI);
-		//_______________________-
+		//_______________________________________
+		// 初始化监控器
+		AQApplicationMonitor::Init();
+		PushOverLay(AQApplicationMonitor::s_Monitor);
+		//_______________________________________
+		//初始化配置
+		m_Window->SetSync(true);         //垂直同步
+		//_______________________________________
 	}
 
 	Application::~Application()
@@ -61,18 +68,20 @@ namespace Aquarius
 		}
 	}
 
-	void Application::OnUpdate()
+	void Application::OnUpdate(DeltaTime& dt)
 	{
 		for (Layer* layer : m_LayerStack)
-			layer->OnUpdate();
+			layer->OnUpdate(dt);
 	}
 
 	void Application::OnGUIRender()
 	{
 
 		m_GUI->Begin();
+
 		for (Layer* layer : m_LayerStack)
 			layer->OnImGuiRender();
+
 		m_GUI->End();
 
 	}
@@ -84,21 +93,25 @@ namespace Aquarius
 
 	void Application::Run()
 	{
-		std::cout << (int)RenderAPI::GetGraphicAPI() << std::endl;
 		while (Running)
 		{
-			//APP先刷新
-			OnUpdate();
+			//前置工作
+			float time = glfwGetTime();
+			DeltaTime dt = time - m_LastFrameTime;
+			m_LastFrameTime = time;
 			//____________________
-			//UI先渲染
-			OnGUIRender();
+			//APP先刷新
+			OnUpdate(dt);
 			//____________________
 			//Layer渲染
 			OnRender();
 			//____________________
+			//UI渲染
+			OnGUIRender();
+			//____________________
 			//窗口环境最后刷新
 			m_Window->OnUpdade();
-			//_____________________---
+			//________________________
 		}
 	}
 
@@ -112,7 +125,6 @@ namespace Aquarius
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
-		OnUpdate();
 		return false;
 	}
 

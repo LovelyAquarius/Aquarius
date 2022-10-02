@@ -1,17 +1,16 @@
 #include "AQPCH.h"
 #include "Renderer.h"
-
+#include"Platform/AQOpenGL/AQGLShader.h"
 
 namespace Aquarius
 {
 	Renderer::SceneData* Renderer::m_SceneData= new Renderer::SceneData();
 
 
-
-
-
-
-
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+	}
 
 	void Renderer::BeginScene(OrthgraphicCamera& camera)
 	{
@@ -22,10 +21,14 @@ namespace Aquarius
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<AQVertexArray>& VAO, const std::shared_ptr<AQGLShader>& shader)
+	void Renderer::Submit( AQRef<AQVertexArray>& VAO,   AQRef<AQShader>& shader, const glm::mat4& transform)
 	{
-		shader->Use();
-		shader->SetUniformVar("u_VP", m_SceneData->ViewProjection);
+		//GLspecific
+	    AQRef<AQGLShader> specificshader=dynamic_cast< AQGLShader*>(( AQShader*)shader);
+		specificshader->Bind();
+		specificshader->SetUniformVar("u_VP", m_SceneData->ViewProjection);
+		specificshader->SetUniformVar("u_VP", m_SceneData->ViewProjection);
+		specificshader->SetUniformVar("u_transform", transform);
 
 		VAO->Bind();
 		RenderCommand::DrawElement(VAO);

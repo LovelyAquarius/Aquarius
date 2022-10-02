@@ -4,50 +4,50 @@
 #define AQ_KEY_UNKNOWN            -1
 
 /* Printable keys */
-#define AQ_KEY_SPACE              32
-#define AQ_KEY_APOSTROPHE         39  /* ' */
+#define AQ_KEY_SPACE               32
+#define AQ_KEY_APOSTROPHE      39  /* ' */
 #define AQ_KEY_COMMA              44  /* , */
-#define AQ_KEY_MINUS              45  /* - */
-#define AQ_KEY_PERIOD             46  /* . */
-#define AQ_KEY_SLASH              47  /* / */
-#define AQ_KEY_0                  48
-#define AQ_KEY_1                  49
-#define AQ_KEY_2                  50
-#define AQ_KEY_3                  51
-#define AQ_KEY_4                  52
-#define AQ_KEY_5                  53
-#define AQ_KEY_6                  54
-#define AQ_KEY_7                  55
-#define AQ_KEY_8                  56
-#define AQ_KEY_9                  57
-#define AQ_KEY_SEMICOLON          59  /* ; */
-#define AQ_KEY_EQUAL              61  /* = */
-#define AQ_KEY_A                  65
-#define AQ_KEY_B                  66
-#define AQ_KEY_C                  67
-#define AQ_KEY_D                  68
-#define AQ_KEY_E                  69
-#define AQ_KEY_F                  70
-#define AQ_KEY_G                  71
-#define AQ_KEY_H                  72
-#define AQ_KEY_I                  73
-#define AQ_KEY_J                  74
-#define AQ_KEY_K                  75
-#define AQ_KEY_L                  76
-#define AQ_KEY_M                  77
-#define AQ_KEY_N                  78
-#define AQ_KEY_O                  79
-#define AQ_KEY_P                  80
-#define AQ_KEY_Q                  81
-#define AQ_KEY_R                  82
-#define AQ_KEY_S                  83
-#define AQ_KEY_T                  84
-#define AQ_KEY_U                  85
-#define AQ_KEY_V                  86
-#define AQ_KEY_W                  87
-#define AQ_KEY_X                  88
-#define AQ_KEY_Y                  89
-#define AQ_KEY_Z                  90
+#define AQ_KEY_MINUS               45  /* - */
+#define AQ_KEY_PERIOD              46  /* . */
+#define AQ_KEY_SLASH               47  /* / */
+#define AQ_KEY_0                      48
+#define AQ_KEY_1                       49
+#define AQ_KEY_2                      50
+#define AQ_KEY_3                       51
+#define AQ_KEY_4                      52
+#define AQ_KEY_5                      53
+#define AQ_KEY_6                      54
+#define AQ_KEY_7                      55
+#define AQ_KEY_8                      56
+#define AQ_KEY_9                      57
+#define AQ_KEY_SEMICOLON        59  /* ; */
+#define AQ_KEY_EQUAL               61  /* = */
+#define AQ_KEY_A                      65
+#define AQ_KEY_B                      66
+#define AQ_KEY_C                      67
+#define AQ_KEY_D                      68
+#define AQ_KEY_E                      69
+#define AQ_KEY_F                      70
+#define AQ_KEY_G                      71
+#define AQ_KEY_H                      72
+#define AQ_KEY_I                      73
+#define AQ_KEY_J                      74
+#define AQ_KEY_K                      75
+#define AQ_KEY_L                      76
+#define AQ_KEY_M                      77
+#define AQ_KEY_N                      78
+#define AQ_KEY_O                      79
+#define AQ_KEY_P                      80
+#define AQ_KEY_Q                      81
+#define AQ_KEY_R                      82
+#define AQ_KEY_S                      83
+#define AQ_KEY_T                      84
+#define AQ_KEY_U                      85
+#define AQ_KEY_V                      86
+#define AQ_KEY_W                      87
+#define AQ_KEY_X                      88
+#define AQ_KEY_Y                      89
+#define AQ_KEY_Z                      90
 #define AQ_KEY_LEFT_BRACKET       91  /* [ */
 #define AQ_KEY_BACKSLASH          92  /* \ */
 #define AQ_KEY_RIGHT_BRACKET      93  /* ] */

@@ -8,6 +8,7 @@ namespace Aquarius
 	AQGLVertexBuffer::AQGLVertexBuffer(int datasize, const void* data, int datahandledtype)
 		:m_Parent(nullptr)
 	{
+		m_type = AQObjectType::AQGLVertexBuffer;
 		GLCALL(glGenBuffers(1, &m_VBO));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 		GLCALL(glBufferData(GL_ARRAY_BUFFER, datasize, data, datahandledtype));
@@ -17,6 +18,7 @@ namespace Aquarius
 	AQGLVertexBuffer::AQGLVertexBuffer(int datasize, const void* data, int datahandledtype, AQGLVertexArray& parent)
 		:m_Parent(&parent)
 	{
+		m_type = AQObjectType::AQGLVertexBuffer;
 		GLCALL(glGenBuffers(1, &m_VBO));
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
 		GLCALL(glBufferData(GL_ARRAY_BUFFER, datasize, data, datahandledtype));
@@ -102,6 +104,7 @@ namespace Aquarius
 	AQGLVertexArray::AQGLVertexArray()
 		:m_VAO(1)
 	{
+		m_type = AQObjectType::AQGLVertexArray;
 		GLCALL(glGenVertexArrays(1, &m_VAO));
 		GLCALL(glBindVertexArray(m_VAO));
 	}
@@ -109,6 +112,7 @@ namespace Aquarius
 	AQGLVertexArray::AQGLVertexArray(AQBufferLayout& layout)
 		:m_VAO(1)
 	{
+		m_type = AQObjectType::AQGLVertexArray;
 		GLCALL(glGenVertexArrays(1, &m_VAO));
 		GLCALL(glBindVertexArray(m_VAO));
 		SetLayout(layout);
@@ -201,6 +205,7 @@ namespace Aquarius
 	AQGLElementBuffer::AQGLElementBuffer(int datasize, const void* data, int datahandledtype)
 		:m_Parent(nullptr)
 	{
+		m_type = AQObjectType::AQGLElementBuffer;
 		GLCALL(glGenBuffers(1, &m_EBO));
 		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO));
 		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, datasize, data, datahandledtype));
@@ -210,10 +215,13 @@ namespace Aquarius
 	AQGLElementBuffer::AQGLElementBuffer(int datasize, const void* data,  int datahandledtype, AQGLVertexArray& parent)
 		:m_Parent(&parent)
 	{
+		m_type = AQObjectType::AQGLElementBuffer;
 		GLCALL(glGenBuffers(1, &m_EBO));
 		GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO));
 		GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, datasize, data, datahandledtype));
 
+		if (m_Parent->GetElementNumber())
+			m_Parent->GetLayout().SetIndex(datasize / sizeof(int));
 	}
 
 	AQGLElementBuffer::~AQGLElementBuffer()

@@ -1,11 +1,8 @@
 #pragma once
 #include "core/AquariusCore.h"
-
-
+#include "core/AQObject.h"
 #include "AQBufferLayout.h"
 #include "Platform/AQOpenGL/GLError.h"
-
-
 namespace Aquarius
 {
 	class AQVertexArray;
@@ -13,13 +10,13 @@ namespace Aquarius
 	class Renderer;
 	enum class GraphicAPI;
 
-	class AQUARIUS_API AQVertexBuffer
+	class AQUARIUS_API AQVertexBuffer:public AQObject
 	{
 	public:
-		AQVertexBuffer() :m_VBO(0) {};
+		AQVertexBuffer() :m_VBO(0) { m_type = AQObjectType::AQVertexBuffer; };
 
-		static AQVertexBuffer* Create(int datasize, const void* data, int datahandledtype);
-		static AQVertexBuffer* Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent);
+		static AQRef<AQVertexBuffer> Create(int datasize, const void* data, int datahandledtype);
+		static AQRef<AQVertexBuffer> Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent);
 		unsigned int& Get(){ return m_VBO; };
 
 		virtual void Bind() const=0;
@@ -32,12 +29,12 @@ namespace Aquarius
 	};
 
 
-	class AQUARIUS_API AQElementBuffer
+	class AQUARIUS_API AQElementBuffer :public AQObject
 	{
 	public:
-		AQElementBuffer() :m_EBO(0) {};
-		static AQElementBuffer* Create(int datasize, const void* data, int datahandledtype);
-		static AQElementBuffer* Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent);
+		AQElementBuffer() :m_EBO(0) { m_type = AQObjectType::AQElementBuffer; };
+		static  AQRef<AQElementBuffer>  Create(int datasize, const void* data, int datahandledtype);
+		static  AQRef<AQElementBuffer> Create(int datasize, const void* data, int datahandledtype, AQVertexArray& parent);
 
 
 		unsigned int& Get() { return m_EBO; };
@@ -51,12 +48,11 @@ namespace Aquarius
 
 	};
 
-	class AQUARIUS_API AQVertexArray
+	class AQUARIUS_API AQVertexArray :public AQObject
 	{
 	public:
-		AQVertexArray() :m_VAO(0) ,ElementNumber (0) {};
-		static AQVertexArray* Create(AQBufferLayout& layout);
-
+		AQVertexArray() :m_VAO(0), ElementNumber(0) { m_type = AQObjectType::AQVertexArray; };
+		static AQRef<AQVertexArray> Create(AQBufferLayout& layout);
 
 
 		unsigned int& Get() { return m_VAO; };

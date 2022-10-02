@@ -14,7 +14,7 @@
 
 namespace Aquarius
 {
-	 template class reference <AQLayout> ;
+	 template class AQreference <AQLayout> ;
 
 
 
@@ -78,7 +78,7 @@ namespace Aquarius
 
 
 		//物件附加属性
-		reference<AQLayout> m_Layout;
+		AQreference<AQLayout> m_Layout;
 
 		
 

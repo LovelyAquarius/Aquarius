@@ -19,11 +19,11 @@ namespace Aquarius {
 	enum AQUARIUS_API EventCategory
 	{
 		None = 0,
-		EventCategoryApplication = BIT(0),     //000000010
-		EventCategoryInput = BIT(1),     //000000100
-		EventCategoryKeyboard = BIT(2),     //000001000
-		EventCategoryMouse = BIT(3),     //000010000
-		EventCategoryMouseButton = BIT(4)	   //000100000
+		EventCategoryApplication = BIT(0),     //000000001
+		EventCategoryInput = BIT(1),     //000000010
+		EventCategoryKeyboard = BIT(2),     //000000100
+		EventCategoryMouse = BIT(3),     //000001000
+		EventCategoryMouseButton = BIT(4)	   //000010000
 
 	};
 

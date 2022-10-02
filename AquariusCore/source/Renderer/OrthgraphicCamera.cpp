@@ -12,6 +12,12 @@ namespace Aquarius
 	}
 
 
+	void OrthgraphicCamera::SetProjection(float left, float right, float bottom, float top)
+	{
+		m_Projection = glm::ortho(left, right, bottom, top, -0.1f, 1.0f);
+		m_VP = m_Projection * m_View;
+	}
+
 	void OrthgraphicCamera::CalculateView()
 	{
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position)*

@@ -1,9 +1,14 @@
+//FRAGMENTSHADER______________________
+#TYPE FRAGMENT
 #version 330 core
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
 
-in vec3 ourColor;
+in vec3 vPos;
+
+uniform vec3 u_color;
 
 void main()
 {
-    FragColor = vec4(ourColor, 1.0f);
+    FragColor =vec4(u_color,1.0f);
 }
+//___________________________________
