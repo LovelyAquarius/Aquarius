@@ -16,7 +16,7 @@ namespace Aquarius
 		virtual void  OnDetach() {}
 		virtual void  OnUpdate(DeltaTime& dt) {}
 		virtual void  OnImGuiRender(){}
-		virtual void	 OnRender(){}
+		virtual void	 OnRender(DeltaTime& dt){}
 
 		virtual void  OnEvent(BaseEvent& event) {}
 

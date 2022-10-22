@@ -1,22 +1,15 @@
 #pragma once
 #include"core/AquariusCore.h"
-#include"core/AQObject.h"
 #include "core/Layer.h"
 #include "EventSystem/KeyEvent.h"
 
 namespace Aquarius
 {
 	class AQObject;
-	class AQShder;
-	class AQGLShder;
-	class AQVertexBuffer;
-	class AQGLVertexBuffer;
-	class AQElementBuffer;
-	class AQGLElementBuffer;
-	class AQVertexArray;
-	class AQGLVertexArray;
-
 	template <typename T> class  AQreference;
+	enum class AQObjectType;
+
+
 
 	//AQ程序用于监控各种对象内存情况的类
 	class AQUARIUS_API AQApplicationMonitor:public Layer
@@ -32,6 +25,7 @@ namespace Aquarius
 
 	public:
 		static void Init();
+		static std::string  ConvertAQTypeToString(const AQObjectType& type);
 		static AQApplicationMonitor* s_Monitor;
 		static bool Enable;
 	private:

@@ -50,12 +50,12 @@ namespace Aquarius
 
 		std::string ToString() const override
 		{
-#ifdef AQ_Debug
+#ifdef AQ_DEBUG
 			std::stringstream ss;
 			ss << "KeyReleasedEvent:" << m_KeyCode;
 			return ss.str();
 #else
-			return std::string("非Debug模式未设置，来自eventsystem。")
+			return std::string("非Debug模式未设置，来自eventsystem。");
 #endif
 		}
 

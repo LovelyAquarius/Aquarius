@@ -6,9 +6,23 @@
 
 namespace Aquarius
 {
+	AQRef<AQShader> AQGLShader::Create(const std::string& name, const char* filepath)
+	{
+		return new AQGLShader(name, filepath);
+	}
+
+	AQRef<AQShader> AQGLShader::Create(const char* filepath)
+	{
+		return new AQGLShader(filepath);
+	}
+
+
+
+
+
 	AQGLShader::AQGLShader(const std::string& Name, const char* filepath)
 	{
-		m_type = AQObjectType::AQGLShder;
+		m_type = AQObjectType::AQGLShader;
 		m_Name = Name;
 		std::string rawcodes = LoadFile(filepath);
 		auto ripecodes = ParseCode(rawcodes);
@@ -17,7 +31,7 @@ namespace Aquarius
 
 	AQGLShader::AQGLShader(const char* filepath)
 	{
-		m_type = AQObjectType::AQGLShder;
+		m_type = AQObjectType::AQGLShader;
 		m_Name = AQ_ExtractFilename(filepath);
 		std::string rawcodes = LoadFile(filepath);
 		auto ripecodes = ParseCode(rawcodes);
@@ -26,26 +40,8 @@ namespace Aquarius
 	}
 
 
-	AQGLShader::AQGLShader(AQGLShader& other)
-		:m_ShaderProgram(other.m_ShaderProgram ) {}
 
-	
-	AQGLShader::AQGLShader(AQGLShader&& other) noexcept
-		:m_ShaderProgram(other.m_ShaderProgram) {}
 
-	AQGLShader& AQGLShader::operator=(AQGLShader& other)
-	{
-		m_ShaderProgram = other.m_ShaderProgram;
-		return *this;
-	}
-
-	
-
-	AQGLShader& AQGLShader::operator=(AQGLShader&& other) noexcept
-	{
-		m_ShaderProgram = other.m_ShaderProgram;
-		return *this;
-	}
 
 	AQGLShader::~AQGLShader()
 	{
@@ -56,6 +52,46 @@ namespace Aquarius
 	void AQGLShader:: Delete()const
 	{
 		GLCALL(glDeleteProgram(m_ShaderProgram));
+	}
+
+	void AQGLShader::SetValue(const std::string& name, int value) const
+	{
+		SetUniformVar(name, value);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, int* values, uint32_t count) const
+	{
+		SetUniformVar(name, values, count);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, float value) const
+	{
+		SetUniformVar(name, value);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, float x, float y, float z) const
+	{
+		SetUniformVar(name, x, y,z);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, float x, float y, float z, float w) const
+	{
+		SetUniformVar(name, x, y, z, w);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, const glm::vec3& value) const
+	{
+		SetUniformVar(name, value);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, const glm::vec4& value) const
+	{
+		SetUniformVar(name, value);
+	}
+
+	void AQGLShader::SetValue(const std::string& name, const glm::mat4& value) const
+	{
+		SetUniformVar(name, value);
 	}
 
 	std::string AQGLShader::LoadFile(const std::string& filepath)
@@ -90,7 +126,7 @@ namespace Aquarius
 			AQ_CORE_ASSERT(EOL != std::string::npos, "Syntax error!");
 			size_t codebegin = pos + typetokenlength + 1;
 			std::string shadertype = rawcodes.substr(codebegin, EOL - codebegin);
-			AQ_CORE_ASSERT(shadertype == "VERTEX" || shadertype == "FRAGMENT" || shadertype == "PIXEL", "Invalid ShaderType:{0} specified!", shadertype);
+			AQ_CORE_ASSERT(shadertype == "VERTEX" || shadertype=="GEOMETRY" || shadertype == "FRAGMENT" || shadertype == "PIXEL", "Invalid ShaderType:{0} specified!", shadertype);
 			size_t nextline = rawcodes.find_first_not_of("\r\n", EOL);
 			pos = rawcodes.find(typetoken, nextline);
 			ripecodes[ConvertGLShaderTypeFromString(shadertype)] = rawcodes.substr(nextline, pos - (nextline == std::string::npos ? rawcodes.size() - 1 : nextline));
@@ -101,7 +137,8 @@ namespace Aquarius
 	GLenum AQGLShader::ConvertGLShaderTypeFromString(const std::string& type)
 	{
 		if (type == "VERTEX") return GL_VERTEX_SHADER;
-		else if (type == "FRAGMENT"|| type == "PIXEL") return GL_FRAGMENT_SHADER;
+		else if (type == "FRAGMENT" || type == "PIXEL") return GL_FRAGMENT_SHADER;
+		else if (type == "GEOMETRY") return GL_GEOMETRY_SHADER;
 		AQ_CORE_ASSERT(false, "Invalid ShaderType:{0} specified!", type);
 		return 0;
 	}
@@ -131,8 +168,8 @@ namespace Aquarius
 				std::vector<GLchar> log(loglength);
 				GLCALL(glGetShaderInfoLog(shader, loglength, &loglength, &log[0]));
 				GLCALL(glDeleteShader(shader));
-				AQ_CORE_ERROR("SHADER:{0}:failed to compile! errorlog:\n{1}", shader, log.data());
-				AQ_CORE_ASSERT(false, "SHADER:{0}:failed to compile! errorlog:\n{1}", shader, log.data());
+				AQ_CORE_ERROR("SHADER:{0}(id:{1}):failed to compile! errorlog:\n{2}", m_Name, shader, log.data());
+				AQ_CORE_ASSERT(false, "Failed to compile shader!", m_Name, shader, log.data());
 			}
 			//___________________________
 			//添加子着色器
@@ -187,6 +224,11 @@ namespace Aquarius
 		GLCALL(glUniform1i(glGetUniformLocation(m_ShaderProgram, name.c_str()), value));
 	}
 
+	void AQGLShader::SetUniformVar(const std::string& name, int* values, uint32_t count) const
+	{
+		GLCALL(glUniform1iv(glGetUniformLocation(m_ShaderProgram, name.c_str()), count,values));
+	}
+
 	void AQGLShader::SetUniformVar(const std::string& name, float value) const
 	{
 		GLCALL(glUniform1f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value));
@@ -202,21 +244,21 @@ namespace Aquarius
 		GLCALL(glUniform4f(glGetUniformLocation(m_ShaderProgram, name.c_str()), x, y, z, w));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec3& value)
+	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec3& value)const
 	{
 		GLCALL(glUniform3f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value.x, value.y, value.z));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec4& value)
+	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec4& value)const
 	{
 		GLCALL(glUniform4f(glGetUniformLocation(m_ShaderProgram, name.c_str()),value.x, value.y, value.z, value.w));
 	}
 
 
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::mat4& mat)
+	void AQGLShader::SetUniformVar(const std::string& name, const glm::mat4& value)const
 	{
-		GLCALL(glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat)));
+		GLCALL(glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()), 1, GL_FALSE, glm::value_ptr(value)));
 	}
 
 

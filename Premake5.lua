@@ -32,7 +32,7 @@ project "AquariusCore"
         "%{prj.name}/source/**.h",
         "%{prj.name}/source/**.cpp",
         "Vendor/OpenGL/GLAD/glad.c",
-        "Vendor/stb_image/stb_image.cpp"
+        -- "Vendor/stb_image/stb_image.cpp"
     }
 
     includedirs
@@ -80,6 +80,11 @@ project "AquariusCore"
         defines
         {
             "AQ_DEBUG"
+        }
+
+        buildoptions 
+        {
+            "/Zi"
         }
     filter "configurations:Release"
         defines "AQ_Release"
@@ -166,6 +171,16 @@ project "Aquarius"
         {
             "AQ_DEBUG"
         }
+        buildoptions 
+        {
+            "/Zi"
+        }
+        linkoptions 
+        {
+            "/NODEFAULTLIB:libcmtd.lib" ,
+            "/LTCG"
+        }
+
     filter "configurations:Release"
         defines "AQ_Release"
         optimize "On"

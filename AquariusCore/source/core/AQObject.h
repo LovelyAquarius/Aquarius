@@ -6,40 +6,35 @@
 namespace Aquarius
 {
 	class AQApplicationMonitor;
+	class AQObject;
+
+
 
 	enum class AQObjectType
 	{
 		NoneAQObJ = 0,
-		AQObject = 1,
-		AQShder = 10, AQGLShder = 11,
+		AQObject = 1,//半抽象考虑删除类型，因为不创建半抽象对象
+		//渲染组件
+		AQShader = 10, AQGLShader = 11,
 		AQVertexBuffer = 20, AQGLVertexBuffer = 21,
 		AQElementBuffer = 30, AQGLElementBuffer = 31,
-		AQVertexArray = 40, AQGLVertexArray = 41
+		AQVertexArray = 40, AQGLVertexArray = 41,
+		AQTexture = 50, AQTexture2D = 51, AQGLTexture2D=52,
+		AQSubTexture2D=60, AQGLSubTexture2D=61,
+		//__________________________________________
+		//几何图形组件
+		AQQuadraticBezierCurve2D =100,
+		AQQuadraticBezierShape2D=110,
+
+		//__________________________________________
+
+
+
 	};
 
-	//AQ对象类，AQ对象自带引用计数
-	//目前在AQ程序中进行AQ自动管理的类有:
-	//AQShder,  AQVertexBuffer, AQElementBuffer ,AQVertexArray
-	class AQUARIUS_API AQObject
-	{
-	public:
-		AQObject(){}
-		AQObject(const AQObject&) : m_referenceCount(0) {}
-		~AQObject() { }
 
-		AQINT GetReferenceCount() const { return m_referenceCount; };
-		void ReferenceIncrease() const { ++m_referenceCount; }
-		void ReferenceDecrease(bool deallocated = true) const noexcept;
-		
-		const std::string GetName()const { return m_Name; }
-		void SetName(std::string& newname) {m_Name = newname;}
-	private:
-		mutable std::atomic<AQINT> m_referenceCount{ 0 };
-	protected:
-		std::string m_Name="Unnamed Object";
-	public:
-		AQObjectType m_type = AQObjectType::AQObject;
-	};
+
+
 
 	//AQ对象引用计数的辅助类
 	template <typename T> class AQUARIUS_API AQreference
@@ -56,7 +51,6 @@ namespace Aquarius
 				((AQObject*)pointer)->ReferenceIncrease();
 				Report();
 			}
-				
 		}
 
 		//引用创建引用
@@ -66,6 +60,36 @@ namespace Aquarius
 			{
 				((AQObject*)m_Pointer)->ReferenceIncrease();
 				Report();
+			}
+		}
+
+		template <typename Q>
+		AQreference(AQreference<Q>& r)
+		{
+			m_Pointer = dynamic_cast<T*>(r.Get());
+			if (m_Pointer)
+			{
+				((AQObject*)m_Pointer)->ReferenceIncrease();
+				Report();
+			}
+			else
+			{
+				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!")
+			}
+		}
+
+		template <typename Q>
+		AQreference(const AQreference<Q>& r)
+		{
+			m_Pointer = const_cast<T*>(dynamic_cast<const T*>(r.Get()));
+			if (m_Pointer)
+			{
+				((AQObject*)m_Pointer)->ReferenceIncrease();
+				Report();
+			}
+			else
+			{
+				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!")
 			}
 		}
 
@@ -149,15 +173,16 @@ namespace Aquarius
 
 		const T& operator*() const { return *m_Pointer; }
 
-		 operator T* () { return m_Pointer; }
+	    operator T* () { return m_Pointer; }
 
 		operator const T* ()const { return m_Pointer; }
 
-		T* get() { return m_Pointer; }
+		T* Get() { return m_Pointer; }
 
-		const T* get() const { return m_Pointer; }
+		const T* Get() const { return m_Pointer; }
 
 		operator bool() const { return m_Pointer != nullptr; }
+
 
     private:
 		void Report()
@@ -177,5 +202,86 @@ namespace Aquarius
 
 	template<typename T>
 		using AQRef = AQreference<T>;
+
+
+	template<typename T, typename Q>
+	AQRef<T> AQRefCast(AQRef<Q>& origin)noexcept
+	{
+		T* p = dynamic_cast<T*>(origin.Get());
+		if(!p)
+			AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!")
+		return p;
+	}
+
+	template<typename T, typename Q>
+	const AQRef<T> AQRefCast(const AQRef<Q>& origin)noexcept
+	{
+		 T* p = const_cast<T*>(dynamic_cast<const T*>(origin.Get()));
+		 if (!p)
+			 AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!")
+		return p;
+	}
+
+
+
+
+
+
+
+
+
+
+}
+
+namespace Aquarius
+{
+
+
+
+	class AQUARIUS_API AQObject
+	{
+	public:
+		static AQRef<AQObject> Create() { return new AQObject(); }
+		static AQRef<AQObject> Create(const std::string& name) { return new AQObject(name); }
+		static AQObjectType ClassType() { return AQObjectType::AQObject; }
+	public:
+		virtual AQRef<AQObject> Copy() { return new AQObject(*this); }//有些类不支持copy
+		~AQObject() {}
+
+		AQINT GetReferenceCount() const { return m_referenceCount; };
+		//不要调用这个函数！
+		/*auto SetReferenceCount(int count) { m_referenceCount = count; }*/
+		void ReferenceIncrease() const { ++m_referenceCount; }
+		void ReferenceDecrease(bool deallocated = true) const noexcept;
+
+
+
+		const std::string GetName()const { return m_Name; }
+		void SetName(std::string& newname) { m_Name = newname; }
+		const AQObjectType GetType()const { return m_type; }
+
+	protected:
+		AQObject() :m_Name("Unnamed Object") { m_type = AQObjectType::AQObject; }
+		AQObject(const std::string& name) :m_Name(name) { m_type = AQObjectType::AQObject; }
+		AQObject(const AQObject& other) : m_referenceCount(0), m_Name(other.m_Name), m_type(AQObjectType::AQObject) {}
+
+	private:
+		mutable std::atomic<AQINT> m_referenceCount{ 0 };
+
+	protected:
+		std::string m_Name;
+		AQObjectType m_type = AQObjectType::AQObject;
+	public:
+
+	};
+
+
+
+
+
+
+
+
+
 
 }

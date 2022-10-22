@@ -1,15 +1,24 @@
 #pragma once
 #include"AQPCH.h"
 #include "Application.h"
+#include "RandomSystem.h"
 #include "APPGUI.h"
 #include "Platform/AQOpenGL/GLError.h"
+#include "Utils/AQFont/FontAPI.h"
 #include "Renderer/Renderer.h"
 #include "Utils/AQMonitor/AQMonitor.h"
+#include "core/AQCommon.h"
+#include "Platform/AQOpenGL/AQGLBuffer.h"
 #include <GLFW/glfw3.h>
 namespace Aquarius
 {
 	Application* Application::s_Instance = nullptr;
+	std::vector<ProfileMessage> Application::s_profile = std::vector<ProfileMessage>();
 	GraphicAPI RenderAPI::s_GraphicAPI = GraphicAPI::OpenGL;
+	
+	 std::mt19937 AQRandom::s_RandomEngine;
+	 std::uniform_int_distribution<std::mt19937::result_type> AQRandom::s_Distribution;
+
 
 	Application::Application()
 		
@@ -26,9 +35,11 @@ namespace Aquarius
 		m_GUI = APPGUI::GetAPPGUI();
 		PushOverLay(m_GUI);
 		//_______________________________________
-		// 初始化监控器
-		AQApplicationMonitor::Init();
+		// 初始化AQ工具
+		AQApplicationMonitor::Init();// 初始化监控器
 		PushOverLay(AQApplicationMonitor::s_Monitor);
+
+		AQFontAPI::CreateAPI();
 		//_______________________________________
 		//初始化配置
 		m_Window->SetSync(true);         //垂直同步
@@ -70,8 +81,12 @@ namespace Aquarius
 
 	void Application::OnUpdate(DeltaTime& dt)
 	{
-		for (Layer* layer : m_LayerStack)
-			layer->OnUpdate(dt);
+		if (!Minlized)
+		{
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate(dt);
+		}
+
 	}
 
 	void Application::OnGUIRender()
@@ -85,26 +100,30 @@ namespace Aquarius
 		m_GUI->End();
 
 	}
-	void Application::OnRender()
+	void Application::OnRender(DeltaTime& dt)
 	{
 		for (Layer* layer : m_LayerStack)
-			layer->OnRender();
+			layer->OnRender(dt);
 	}
 
 	void Application::Run()
 	{
+
+
 		while (Running)
 		{
 			//前置工作
-			float time = glfwGetTime();
+			float time = (float)glfwGetTime();
 			DeltaTime dt = time - m_LastFrameTime;
 			m_LastFrameTime = time;
+			if (dt > 20)
+				dt = 0;
 			//____________________
 			//APP先刷新
 			OnUpdate(dt);
 			//____________________
 			//Layer渲染
-			OnRender();
+			OnRender(dt);
 			//____________________
 			//UI渲染
 			OnGUIRender();
@@ -125,6 +144,14 @@ namespace Aquarius
 
 	bool Application::OnWindowResize(WindowResizeEvent& event)
 	{
+		//检测窗口最小化
+		if (event.GetWidth() == 0 || event.GetHeight() == 0)
+		{Minlized = true; return false;}
+		//____________________________________
+		Minlized = false;
+		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+		OnUpdate(zerotime);
+		OnRender(zerotime);
 		return false;
 	}
 

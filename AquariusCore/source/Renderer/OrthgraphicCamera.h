@@ -5,6 +5,7 @@
 
 namespace Aquarius
 {
+
 	class AQUARIUS_API OrthgraphicCamera
 	{
 	public:

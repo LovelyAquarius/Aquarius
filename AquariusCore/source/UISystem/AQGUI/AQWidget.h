@@ -48,7 +48,7 @@ namespace Aquarius
 
 
 		AQLayout* GetLayout() { return m_Layout; }
-		const AQLayout* SetLayout() const { return m_Layout.get(); }
+		const AQLayout* SetLayout() const { return m_Layout.Get(); }
 		void SetLayout(AQLayout* layout) { m_Layout = layout; }
 
 

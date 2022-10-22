@@ -19,7 +19,7 @@ namespace Aquarius
 		void OnEvent(BaseEvent& event);
 		void OnUpdate(DeltaTime& dt);
 		void OnGUIRender();			//UI渲染时机
-		void OnRender();					//layer渲染时机
+		void OnRender(DeltaTime& dt);					//layer渲染时机
 
 		void PushLayer(Layer* layer);
 		void PushOverLay(Layer* layer);
@@ -27,6 +27,7 @@ namespace Aquarius
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 
+		static std::vector<ProfileMessage> s_profile;
 	private:
 		bool OnWindowClose(WindowCloseEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
@@ -36,12 +37,13 @@ namespace Aquarius
 		std::unique_ptr<Window> m_Window{ Window::Create() };
 		APPGUI* m_GUI;
 		bool Running = true;
+		bool Minlized = false;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime;
-		//______________________________________
-
-
 		
+		//______________________________________
+		//其他
+		DeltaTime zerotime = 0.0f;
 
 	};
 	Application* CreateApplication();

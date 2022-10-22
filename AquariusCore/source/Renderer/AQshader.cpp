@@ -6,38 +6,38 @@
 namespace Aquarius
 {
 
-	AQreference<AQShader> AQShader::Create(const std::string& name, const char* filepath)
+	AQRef<AQShader> AQShader::Create(const std::string& name, const char* filepath)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
 		case GraphicAPI::None:
 		{AQ_CORE_ASSERT(false, "RenderAPI::NO GraphicAPI is supported！"); break; }
 		case GraphicAPI::OpenGL:
-			return new AQGLShader(name, filepath);
+			return AQGLShader::Create(name, filepath);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return AQreference<AQShader>();
+		return AQRef<AQShader>();
 	}
 
-	AQreference<AQShader> AQShader::Create(const char* filepath)
+	AQRef<AQShader> AQShader::Create(const char* filepath)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
 		case GraphicAPI::None:
 		{AQ_CORE_ASSERT(false, "RenderAPI::NO GraphicAPI is supported！"); break; }
 		case GraphicAPI::OpenGL:
-			return new AQGLShader(filepath);
+			return  AQGLShader::Create(filepath);
 		}
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
-		return AQreference<AQShader>();
+		return AQRef<AQShader>();
 	}
 
 }
 namespace Aquarius
 {
-	AQreference<AQShader> AQShaderLibrary::empty = AQreference<AQShader>();
+	AQRef<AQShader> AQShaderLibrary::empty = AQRef<AQShader>();
 
-	 AQreference<AQShader>& AQShaderLibrary::Get(const std::string name)
+	 AQRef<AQShader>& AQShaderLibrary::Get(const std::string name)
 	{
 		if (!DoesExist(name))
 		{
@@ -49,7 +49,7 @@ namespace Aquarius
 	}
 
 
-	void AQShaderLibrary::Add(const std::string& name, const AQreference<AQShader>& shader)
+	void AQShaderLibrary::Add(const std::string& name, const AQRef<AQShader>& shader)
 	{
 		if (DoesExist(name))
 			AQ_CORE_ERROR("Failed to add shader to library:the name'{0}' of the shader already exists !", name);
@@ -57,20 +57,20 @@ namespace Aquarius
 			m_ShaderLib[name] = shader;
 	}
 
-	void AQShaderLibrary::Add(const AQreference<AQShader>& shader)
+	void AQShaderLibrary::Add(const AQRef<AQShader>& shader)
 	{
 		auto& name = shader->GetName();
 		Add(name, shader);
 	}
 
-	AQreference<AQShader> AQShaderLibrary::Load(const char* filepath)
+	AQRef<AQShader> AQShaderLibrary::Load(const char* filepath)
 	{
 		auto shader = AQShader::Create(filepath);
 		Add(shader);
 		return shader;
 	}
 
-	AQreference<AQShader> AQShaderLibrary::Load(const std::string& name, const char* filepath)
+	AQRef<AQShader> AQShaderLibrary::Load(const std::string& name, const char* filepath)
 	{
 		auto shader = AQShader::Create(filepath);
 		Add(name, shader);

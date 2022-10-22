@@ -1,6 +1,7 @@
 #include "AQPCH.h"
 #include "AQMonitor.h"
 #include "core/KeyCode.h"
+#include "core/AQObject.h"
 
 namespace Aquarius
 {
@@ -39,7 +40,7 @@ namespace Aquarius
 			int count=1;
 			for (auto it = AQApplicationMonitor::s_Monitor->AQObjects.begin(); it != AQApplicationMonitor::s_Monitor->AQObjects.end(); it++)
 			{
-				AQ_CLIENT_INFO("{0}; ObjectName:{1}; AQObjectType:{2}; RerenceCount:{3}; MemoryLocation:{4};", count, it->second->GetName(), (int)it->second->m_type, it->second->GetReferenceCount() - 1, it->first);
+				AQ_CLIENT_INFO("{0}; ObjectName:{1}; AQObjectType:{2}; RerenceCount:{3}; MemoryLocation:{4};", count, it->second->GetName(), ConvertAQTypeToString(it->second->GetType()), it->second->GetReferenceCount() - 1, it->first);
 				count++;
 			}
 		}
@@ -51,16 +52,38 @@ namespace Aquarius
 		AQApplicationMonitor::s_Monitor = new AQApplicationMonitor();
 	}
 
+	std::string AQApplicationMonitor::ConvertAQTypeToString(const AQObjectType& type)
+	{
+		switch (type)
+		{
+		case(AQObjectType::AQObject):return std::string("AQObject");
+		case(AQObjectType::AQShader):return std::string("AQShader");
+		case(AQObjectType::AQGLShader):return std::string("AQGLShader");
+		case(AQObjectType::AQVertexBuffer):return std::string("AQVertexBuffer");
+		case(AQObjectType::AQElementBuffer):return std::string("AQElementBuffer");
+		case(AQObjectType::AQVertexArray):return std::string("AQVertexArray");
+		case(AQObjectType::AQGLVertexBuffer):return std::string("AQGLVertexBuffer");
+		case(AQObjectType::AQGLElementBuffer):return std::string("AQGLElementBuffer");
+		case(AQObjectType::AQGLVertexArray):return std::string("AQGLVertexArray");
+		case(AQObjectType::AQTexture2D):return std::string("AQTexture2D");
+		case(AQObjectType::AQGLTexture2D):return std::string("AQGLTexture2D");
+		case(AQObjectType::AQQuadraticBezierCurve2D):return std::string("AQQuadraticBezierCurve2D");
+		case(AQObjectType::AQQuadraticBezierShape2D):return std::string("AQQuadraticBezierShape2D");
+		}
+		return std::string("UnkownType");
+	}
+
 	void AQApplicationMonitor::Refresh()
 	{
 		if (AQApplicationMonitor::Enable)
 		{
-			for (auto it =AQApplicationMonitor::s_Monitor->AQObjects.begin(); it!= AQApplicationMonitor::s_Monitor->AQObjects.end();it++)
+			for (auto it =AQApplicationMonitor::s_Monitor->AQObjects.begin(); it!= AQApplicationMonitor::s_Monitor->AQObjects.end(); it++)
 			{
 				if (it->second->GetReferenceCount() == 1)
 				{
-					it->second->ReferenceDecrease();
-					AQApplicationMonitor::s_Monitor->AQObjects.erase(it);
+					it=AQApplicationMonitor::s_Monitor->AQObjects.erase(it);
+					if (it == AQApplicationMonitor::s_Monitor->AQObjects.end())
+						it--;
 				}
 			}
 		}

@@ -16,8 +16,8 @@ namespace Aquarius
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;        
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;      
 
-        ImGui::StyleColorsDark();
-
+        ImGui::StyleColorsLight();
+        io.Fonts->AddFontFromFileTTF("G:/Mine/CppProjects/Aquarius/AquariusCore/source/Data/Fonts/msyh.ttc", 24.0f, 0, io.Fonts->GetGlyphRangesChineseFull());
         ImGuiStyle& style = ImGui::GetStyle();
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -46,7 +46,7 @@ namespace Aquarius
     void APPGUI::OnImGuiRender()
     {
         static bool show = true;
-        ImGui::ShowDemoWindow(&show);
+
     }
 
 
@@ -65,7 +65,7 @@ namespace Aquarius
 
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
-        io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+        io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

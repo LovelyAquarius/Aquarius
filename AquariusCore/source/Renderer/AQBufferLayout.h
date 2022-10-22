@@ -15,6 +15,7 @@ namespace Aquarius
 		Float1, Float2, Float3, Float4,
 		Mat3F, Mat4F,
 		Int1, Int2, Int3, Int4,
+		Uint1, Uint2, Uint3, Uint4,
 		Bool
 	};
 
@@ -24,11 +25,10 @@ namespace Aquarius
 		uint32_t BufferLocation;
 		BufferDataType Type ;
 		bool Normalized;
-		uint32_t Offset ;
+		uint64_t Offset ;//这个大小取决于实现的内存寻址大小
 		uint32_t Count;  //总数据量
 
-		BufferElement(){};
-			
+
 
 		BufferElement(const std::string& name, uint32_t  bufferlocation ,BufferDataType type,bool normalized=false)
 			:Name(name), BufferLocation(bufferlocation),Type(type), Normalized(normalized), Offset(0), Count(0)
@@ -50,6 +50,10 @@ namespace Aquarius
 			case Aquarius::BufferDataType::Int2:		return  2;
 			case Aquarius::BufferDataType::Int3:		return  3;
 			case Aquarius::BufferDataType::Int4:		return  4;
+			case Aquarius::BufferDataType::Uint1:		return 1;
+			case Aquarius::BufferDataType::Uint2:    return  2;
+			case Aquarius::BufferDataType::Uint3:	return  3;
+			case Aquarius::BufferDataType::Uint4:	return  4;
 			case Aquarius::BufferDataType::Bool:		return 1;
 			default:break;
 			}
@@ -65,12 +69,16 @@ namespace Aquarius
 			case Aquarius::BufferDataType::Float2:	return sizeof(float);
 			case Aquarius::BufferDataType::Float3:	return sizeof(float);
 			case Aquarius::BufferDataType::Float4:	return sizeof(float);
-			case Aquarius::BufferDataType::Mat3F:	return  sizeof(float);
+			case Aquarius::BufferDataType::Mat3F:	return sizeof(float);
 			case Aquarius::BufferDataType::Mat4F:	return sizeof(float);
 			case Aquarius::BufferDataType::Int1:		return sizeof(int);
-			case Aquarius::BufferDataType::Int2:		return  sizeof(int);
-			case Aquarius::BufferDataType::Int3:		return  sizeof(int);
-			case Aquarius::BufferDataType::Int4:		return  sizeof(int);
+			case Aquarius::BufferDataType::Int2:		return sizeof(int);
+			case Aquarius::BufferDataType::Int3:		return sizeof(int);
+			case Aquarius::BufferDataType::Int4:		return sizeof(int);
+			case Aquarius::BufferDataType::Uint1:		return sizeof(unsigned int);
+			case Aquarius::BufferDataType::Uint2:    return sizeof(unsigned int);
+			case Aquarius::BufferDataType::Uint3:	return sizeof(unsigned int);
+			case Aquarius::BufferDataType::Uint4:	return sizeof(unsigned int);
 			case Aquarius::BufferDataType::Bool:		return sizeof(bool);
 			default:break;
 			}
@@ -93,6 +101,10 @@ namespace Aquarius
 			case Aquarius::BufferDataType::Int2:		return GL_INT;
 			case Aquarius::BufferDataType::Int3:		return GL_INT;
 			case Aquarius::BufferDataType::Int4:		return GL_INT;
+			case Aquarius::BufferDataType::Uint1:		return GL_UNSIGNED_INT;
+			case Aquarius::BufferDataType::Uint2:    return GL_UNSIGNED_INT;
+			case Aquarius::BufferDataType::Uint3:	return GL_UNSIGNED_INT;
+			case Aquarius::BufferDataType::Uint4:	return GL_UNSIGNED_INT;
 			case Aquarius::BufferDataType::Bool:		return GL_BYTE;
 			default:break;
 			}
@@ -122,17 +134,14 @@ namespace Aquarius
 		std::vector<BufferElement>::const_iterator end() const { return m_Elements.end(); }
 	public:	
 		void CalculateCount(int datasize);
-		void SetIndex(unsigned int indexcount);
-		const uint32_t& GetIndex()const { return m_IndexToDraw; }
 
 	private:
 		void CalculateOffsetAndStride();
-	
+
 
 
 	private:
 		uint32_t m_Stride;
-		uint32_t m_IndexToDraw;
 		std::vector<BufferElement> m_Elements;
 		
 	};

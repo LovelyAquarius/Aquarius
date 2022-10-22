@@ -3,7 +3,7 @@
 
 namespace Aquarius
 {
-	GraphicAPI RenderAPI::s_GraphicAPI = GraphicAPI::OpenGL;
+
 	
 
 

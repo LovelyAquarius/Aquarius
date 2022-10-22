@@ -1,23 +1,26 @@
 #include "Aquarius.h"
-
+#include "Renderer/ParticleSystem/AQParticle2D.h"
+#include "Platform/AQOpenGL/AQGLBuffer.h"
+#include "Utils/AQFont/AQTextImage.h"
 class  ExampleLayer :public Aquarius::Layer
 {
 public:
 	ExampleLayer();
 
 	virtual void OnUpdate(Aquarius::DeltaTime& dt)override;
-	virtual void	 OnRender()override;
+	virtual void	 OnRender(Aquarius::DeltaTime& dt)override;
 	virtual void OnEvent(Aquarius::BaseEvent& event)override;
 	virtual void  OnImGuiRender()override;
 
 private:
 	//独立事件
-	bool CameraKeyControl(Aquarius::KeyPressedEvent& event);
-	bool CameraMouseControl(Aquarius::MouseMovedEvent& event);
-
+	bool OnKeyPressed(Aquarius::KeyPressedEvent& event);
+	bool OnWindowResize(Aquarius::WindowResizeEvent& event);
 private:
 	//一些附件
 	Aquarius::AQShaderLibrary m_Shaderlib;
+	Aquarius::AQParticcle2D m_Particle2D;
+	Aquarius::AQParticcle2D::ParticleProperties m_ParticleSetting;
 	// ————————————————————————————————————————
 	//camera相关属性
 	Aquarius::OrthgraphicCameraController m_CameraController;
@@ -29,69 +32,18 @@ private:
 	float m_Object_1_Rotationspeed = 0.0f;
 
 	glm::vec3 m_Object_2_scale{ 0.1f,0.1f,0.0f };
-	glm::vec3 m_Object_2_color{ 0.2f,0.3f,0.8f };
+	glm::vec4 m_Object_2_color{ 0.2f,0.3f,0.8f ,1.0f};
 };
  
  
 float vertices[] =
 {
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-	-0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,     1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,     1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f,    0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,   1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f,     1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,     1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f,   1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f,   0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f,   0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f,   0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+	-0.5f, -0.5f, 0.0f,        0.5f, 0.5f, 0.0f,      -0.5f, 0.5f, 0.0f,    10.0f,    0.8f, 0.2f, 0.3f, 1.0f
 };
 
 unsigned int indices[] = 
 {
-		 0,  1,   2, 
-		 3,  4, 5,
-		 6,  7,  8,
-		 9,  10,  11,
-	    12,  13,  14,
-	    15,  16,  17,
-		18  ,19, 20,
-		21,22,23,
-		24,25,26,
-		27,28,29,
-		30,31,32,
-		33,34,35
+	0
 };
 
 float square_data[] =
@@ -111,67 +63,87 @@ unsigned int square_element[] =
  bool firstframe = true;
  float acceleration = 7.0f;
  float onesecondcount=0.0f;
+ float fivesecondcount = 0.0f;
+ float testdata;
  int framecount = 0;
  glm::vec4 red(0.8f, 0.2f, 0.3f, 1.0f);
  glm::vec4 blue(0.2f, 0.3f, 0.8f, 1.0f);
+ glm::vec3 randompotision;
 
 
- Aquarius::ThreeDModel model;
- Aquarius::AQRef<Aquarius::AQVertexArray> box_vao ;
- Aquarius::AQRef<Aquarius::AQVertexBuffer> box_vbo ;
- Aquarius::AQRef<Aquarius::AQElementBuffer> box_ebo  ;
- Aquarius::AQRef<Aquarius::AQVertexArray> square_vao ;
- Aquarius::AQRef<Aquarius::AQVertexBuffer> square_vbo  ;
- Aquarius::AQRef<Aquarius::AQElementBuffer> square_ebo;
- Aquarius::AQGLTexture2D* pic = nullptr;
- Aquarius::AQGLTexture2D* bilibili = nullptr;
+ Aquarius::AQRef<Aquarius::AQTexture2D> backpicture;
+ Aquarius::AQRef<Aquarius::AQTexture2D> bilibilipicture;
+ Aquarius::AQRef<Aquarius::AQTexture2D> mypicture;
+ Aquarius::AQRef<Aquarius::AQSubTexture2D> spirite;
 
- ExampleLayer::ExampleLayer() :Layer("Example"), m_CameraController(1280.0f/720.0f), m_Object_1_position(0.0f,0.0f,0.0f)
+
+ glm::vec3 start = { -2.7f,-5.7f,0.0f };
+ glm::vec3 end = { 0.2f,0.4f,0.0f };
+ glm::vec3 controlpoint={4.3f,-2.0f,0.0f};
+ float* input = new float;
+ uint32_t pointcount;
+
+ Aquarius::AQRef<Aquarius::AQVertexArray>  testvao;
+ Aquarius::AQRef<Aquarius::AQVertexBuffer>  testvbo;
+ Aquarius::AQRef<Aquarius::AQElementBuffer> testebo;
+ Aquarius::AQRef<Aquarius::AQShader> testshader;
+
+ glm::vec2 center = { 0.0f,0.0f };
+ float radius = 1.0f;
+ float magicnumber = (4.0f / 3.0f) * glm::tan(2.0f * glm::pi<float>() / 2.0f / 4.0f);
+ std::vector<glm::vec2> quadraticbezier;
+ glm::vec2 direction;
+
+ std::vector<Aquarius::AQRef<Aquarius::AQQuadraticBezierCurve2D>> bezier;
+ char utf8[10] = "";
+ char utf8_old[5] = "";
+ char unicode[10];
+
+
+
+
+ ExampleLayer::ExampleLayer() :Layer("Example"), m_CameraController(1280.0f / 720.0f), m_Object_1_position(0.0f, 0.0f, 0.0f),m_Particle2D(30000)
  {
-	 Aquarius::AQBufferLayout boxlayout{
-			Aquarius::BufferElement {"vertex",0,Aquarius::BufferDataType::Float3},
-			Aquarius::BufferElement{"texture_coords",1,Aquarius::BufferDataType::Float2}
-	 };
-	 Aquarius::AQBufferLayout squarelayout{
-			Aquarius::BufferElement {"vertex",0,Aquarius::BufferDataType::Float3}};
+	 //const char* mshader = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\renderer2d_beziershape.glsl)";
+	 //m_Shaderlib.Load(mshader);
+
+	 const char* bilifile = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\bilibili.png)";
+	 const char* picf = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Checkerboard.png)";
+	 const char* mypicfile = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\lovely.png)";
+	 backpicture = Aquarius::AQTexture2D::Create(picf);
+	 bilibilipicture = Aquarius::AQTexture2D::Create(bilifile);
+	 mypicture = Aquarius::AQTexture2D::Create(mypicfile);
 
 
-	 const char* vspath1 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\3DShader\3D.vs)";
-	 const char* fspath1 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\3DShader\3D.fs)";
-	 const char* sdpath1 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\3DShader\box.sd)";
+	 //设置particle
+	 m_ParticleSetting.BeginColor = { 254 / 255.0f,212 / 255.0f,123 / 255.0f,1.0f };
+	 m_ParticleSetting.EndColor = { 254 / 255.0f,109 / 255.0f,41 / 255.0f, 1.0f };
+	 m_ParticleSetting.BeginSize = 0.3f;
+	 m_ParticleSetting.SizeVariation = 0.3f;
+	 m_ParticleSetting.EndSize = 0.0f;
+	 m_ParticleSetting.Lifetime = 7.0f;
+	 m_ParticleSetting.Velosity = { 0.0f,0.0f };
+	 m_ParticleSetting.VelosityVariation = { 3.0f, 1.0f };
+	 m_ParticleSetting.Position = { 0.0f,0.0f };
+	 //________________________
+	 strcpy(utf8, (char*)u8"");
+	Aquarius::AQ_UTF8ToUnicode(utf8,unicode);
 
-	 const char* vspath2 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\VS.vs)";
-	 const char* fspath2 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\FS.fs)";
-	 const char* sdpath2 = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\square.sd)";
-	 m_Shaderlib.Load(sdpath1);
-	 m_Shaderlib.Load(sdpath2);
+	 Aquarius::AQFontAPI::GetAQFontAPI()->LoadFont(Aquarius::AQTextImage::fontfilepath);
+	 //Aquarius::AQFontAPI::bitmap* bitmap =Aquarius::AQFontAPI::GetAQFontAPI()->GetSinglecharacterBitmap(0x53, 200);
+	 //Aquarius::AQFontAPI::GetAQFontAPI()->WriteBitmapToPNG("test.png", bitmap);
+	 Aquarius::AQFontAPI::GetAQFontAPI()->GetSinglecharacterBezier(*(unsigned short*)unicode, bezier, 0.001f);
+	 //_____________________________________-
+	 spirite = Aquarius::AQSubTexture2D::Create(bilibilipicture, { 162,124 }, { 1,1 });
+
+	 Aquarius::AQRef<Aquarius::AQSubTexture2D> copy = spirite->Copy();
 
 
-	 square_vao = Aquarius::AQVertexArray::Create(squarelayout);
-	 square_vbo = Aquarius::AQVertexBuffer::Create(sizeof(square_data), square_data, GL_STATIC_DRAW, *square_vao);
-	 square_ebo = Aquarius::AQElementBuffer::Create(sizeof(square_element), square_element, GL_STATIC_DRAW, *square_vao);
-	 square_vao->Enable(0);
-
-	 box_vao = Aquarius::AQVertexArray::Create(boxlayout);
-	 box_vbo= Aquarius::AQVertexBuffer::Create(sizeof(vertices), vertices, GL_STATIC_DRAW, *box_vao);
-	 box_ebo = Aquarius::AQElementBuffer::Create(sizeof(indices), indices, GL_STATIC_DRAW, *box_vao);
-	 box_vao->Enable(0, 1);
-
-	 const char* picf = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\bilibili.png)";
-	 const char* bilifile = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\awesomeface.png)";
-	 Aquarius::AQGLTexture2D* pic = new Aquarius::AQGLTexture2D(picf);
-	 Aquarius::AQGLTexture2D* bilibili = new Aquarius::AQGLTexture2D(bilifile);
-	 
-	 m_Shaderlib.Get("box")->Bind();
-	 ((Aquarius::AQGLShader*)((Aquarius::AQShader*)m_Shaderlib.Get("box")))->SetUniformVar("texture1", 0);
-	 ((Aquarius::AQGLShader*)((Aquarius::AQShader*)m_Shaderlib.Get("box")))->SetUniformVar("texture2", 1);
-
-	 pic->BindTextureUnit(GL_TEXTURE0);
-	 bilibili->BindTextureUnit(GL_TEXTURE1);
  }
 
  void ExampleLayer::OnUpdate(Aquarius::DeltaTime& dt)
  {
+	 AQ_TIME_MONITOR("ExampleLayer::OnUpdate");
 	 using namespace Aquarius;
 	 //监视帧率
 	 if (onesecondcount < 1.0f)
@@ -185,6 +157,29 @@ unsigned int square_element[] =
 		 onesecondcount = 0.0f;
 		 onesecondcount += dt;
 		 framecount = 1;
+	 }
+	 if (fivesecondcount <3.0f)
+	 {
+		 fivesecondcount += dt;
+	 }
+	 else
+	 {
+		 float x = Aquarius::AQRandom::Float()*1280.0f;
+		 float y = Aquarius::AQRandom::Float()*720.0f;
+		 float r = Aquarius::AQRandom::Float() * 40;
+		 auto width = Application::Get().GetWindow().GetWidth();
+		 auto height = Application::Get().GetWindow().GetHeight();
+
+		 auto bounds = m_CameraController.GetBounds();
+		 auto position = m_CameraController.GetCamera().GetPosition();
+		 x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		 y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		 m_ParticleSetting.Position = { x + position.x, y + position.y };
+		 for (int i = 0; i < r; i++)
+			 m_Particle2D.Emit(m_ParticleSetting);
+	
+		 fivesecondcount = 0.0f;
+		 fivesecondcount += dt;
 	 }
 	 //____________________________________________
 	 // camera控制
@@ -201,7 +196,23 @@ unsigned int square_element[] =
 	 else if (Input::IsKeyPressed(AQ_KEY_I))
 		 m_Object_1_position.y += m_Object_1_MovingSpeed * dt;
 	 //___________________________________
-	
+	//particle控制
+	/* if (Input::IsMouseButtonPressed(AQ_MOUSE_BUTTON_LEFT))
+	 {
+		 auto [x, y] = Input::GetMousePosition();
+		 auto width = Application::Get().GetWindow().GetWidth();
+		 auto height = Application::Get().GetWindow().GetHeight();
+
+		 auto bounds = m_CameraController.GetBounds();
+		 auto position = m_CameraController.GetCamera().GetPosition();
+		 x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		 y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		 m_ParticleSetting.Position = { x + position.x, y + position.y };
+		 for (int i = 0; i < 10; i++)
+			 m_Particle2D.Emit(m_ParticleSetting);
+	 }*/
+	 m_Particle2D.OnUpdate(dt);
+	 //_____________________________________
 	 //object非控制
 	 if (firstframe)
 		 firstframe = false;
@@ -227,66 +238,133 @@ unsigned int square_element[] =
 	 //_______________________________
  }
 
- void	 ExampleLayer::OnRender()
+ void	 ExampleLayer::OnRender(Aquarius::DeltaTime& dt)
  {
+	 AQ_TIME_MONITOR("ExampleLayer::OnRender");
+	 //清除所有状态
+	 Aquarius::Renderer2D::ResetStatistics();
+	 //__________________________________________________
+	 //初始化渲染
 	 Aquarius::RenderCommand::SetClearcolor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	 Aquarius::RenderCommand::Clear();
-
+	 //__________________________________________________
 	 //渲染camera
-	 Aquarius::Renderer::BeginScene(m_CameraController.GetCamera());
-	 glm::mat4 box_transform = glm::translate(glm::mat4(1.0f), m_Object_1_position);
-	 box_transform = glm::rotate(box_transform, glm::radians(m_Object_1_Rotation), glm::vec3(1.0f, 0.0f, 1.0f));
-	 glm::mat4 square_transform(1.0f);
-	 glm::mat4 scale = glm::scale(glm::mat4(1.0f), m_Object_2_scale);
-
-	 m_Shaderlib.Get("square")->Bind();
-	 ((Aquarius::AQGLShader*)((Aquarius::AQShader*)m_Shaderlib.Get("square")))->SetUniformVar("u_color", m_Object_2_color);
-
-
-	 for (int y = 0; y < 20; y++)
 	 {
-		 for (int x = 0; x < 20; x++)
-		 {
-			 glm::vec3 pos(x * 0.12f, y * 0.12f, 0.0f);
-			 square_transform = glm::translate(glm::mat4(1.0f), pos)* scale;
-			 Aquarius::Renderer::Submit(square_vao, m_Shaderlib.Get("square"), square_transform);
-		 }
-	 }
-	
-	 Aquarius::Renderer::Submit(box_vao, m_Shaderlib.Get("box"), box_transform);
+		 AQ_TIME_MONITOR("Renderer2D::Scene");
+		 Aquarius::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-	 Aquarius::Renderer::EndScene();
-	 //_________________________________________
+		 //Aquarius::Renderer2D::DrawQuad({ -0.5f,0.2f ,-0.1 },  0.0f ,{ 10.0f,10.0f }, backpicture, 10.0f);
+		 //Aquarius::Renderer2D::DrawQuad({ -0.0f,0.0f ,-0.0 }, 0.0f, { 1.0f,1.0f }, bilibilipicture);
+		 
+		 if(*(unsigned short*)utf8== *(unsigned short*)utf8_old|| *(unsigned short*)utf8==0)
+		 { }
+		 else
+		 {
+			 *(unsigned short*)utf8_old = *(unsigned short*)utf8;
+			 Aquarius::AQ_UTF8ToUnicode(utf8, unicode);
+			 Aquarius::AQFontAPI::GetAQFontAPI()->GetSinglecharacterBezier(*(unsigned short*)unicode, bezier, 0.001f);
+		 }
+		 //for (int i = 0; i < 2; i++)
+		 //{
+			// glm::vec3 start{ bezier[0]->GetPoints()[i].x,bezier[0]->GetPoints()[i].y,0.0f };
+			// glm::vec3 end{ bezier[0]->GetPoints()[i + 1].x,bezier[0]->GetPoints()[i + 1].y,0.0f };
+			// glm::vec3 control{bezier[0]->GetControls()[i].x,bezier[0]->GetControls()[i].y,0.0f };
+			// Aquarius::Renderer2D::DrawBezier_GPU(start, end, control, 10, red, 5.0f);
+		 //}
+		 
+		 for (int i = 0; i < bezier.size(); i++)
+		 {
+			 Aquarius::Renderer2D::DrawBezier_Line_GPU(bezier[i],20, red,5.0f);
+		 }
+
+		 //Aquarius::Renderer2D::DrawQuad(m_Object_1_position, { 0.8f,0.8f,0.0f },60.0f, { 1.0f,1.0f }, m_Object_2_color);
+		 /*Aquarius::Renderer2D::DrawBezier_GPU({ -0.5f,-0.5f,0.0f }, { 0.5f,0.5f,0.0f }, { -0.5f,0.5f,0.0f }, 20, red,5.0f);*/
+		 
+		 Aquarius::Renderer2D::EndScene();
+	 }
+	 m_Particle2D.OnRender(m_CameraController.GetCamera());
+	
+	 //testshader->Bind();
+	 //testshader->SetValue("u_VP", m_CameraController.GetCamera().GetViewProjection());
+	 //testvao->Bind();
+	 //glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
+
  }
 
  
  void ExampleLayer::OnEvent(Aquarius::BaseEvent& event)
  {
 	 Aquarius::EventDispatcher dispatcher(event);
+	 dispatcher.Dispatch<Aquarius::KeyPressedEvent>(AQ_BIND_EVENT_FN(ExampleLayer::OnKeyPressed));
 	 m_CameraController.OnEvent(event);
  }
  
 
  void  ExampleLayer::OnImGuiRender()
  {
-	 ImGui::Begin("Settings");
-	 ImGui::ColorEdit3("color", glm::value_ptr(m_Object_2_color));
+	 ImGui::Begin("Renderer2D Settings");
+	 ImGui::ColorEdit4("begincolor", glm::value_ptr(m_ParticleSetting.BeginColor));
+	 ImGui::ColorEdit4("endcolor", glm::value_ptr(m_ParticleSetting.EndColor));
+	 ImGui::InputText("字(Unicode编码)", utf8, IM_ARRAYSIZE(utf8));
+
+
+	 ImGui::Text("相机角度%f", m_CameraController.GetCamera().GetRotation());
+
+	 ImGui::Text("相机位置（%f，%f）", m_CameraController.GetCamera().GetPosition().x, m_CameraController.GetCamera().GetPosition().y);
+	 ImGui::Text("ParticleIndex:%d", m_Particle2D.GetParticleIndex());
+	 ImGui::Text("Alive Particle Count:%d", m_Particle2D.GetAliveParticleCount());
+
+
+	 auto stats = Aquarius::Renderer2D::GetStatistics();
+	 ImGui::Text("Renderer2D Statistics:");
+	 ImGui::Text("DrawCalls:%d", stats.DrawCalls);
+	 ImGui::Text("Quads:%d", stats.QuadCount);
+	 ImGui::Text("QuadVertices:%d", stats.GetQuadVertexCount());
+	 ImGui::Text("QuadElements:%d", stats.GetQuadElementCount());
+	 ImGui::Text("BezierVertices:%d", stats.GetBezierVertexCount());
+
+	 ImGui::Text("性能监控:");
+	 for (auto& profilemessage : Aquarius::Application::s_profile)
+	 {
+		 char label[70];
+		 strcpy(label, profilemessage.Name);
+		 strcat(label, "%s %.3fms");
+		 ImGui::Text(label,"用时：", profilemessage.Time);
+	 }
+	 Aquarius::Application::s_profile.clear();
 	 ImGui::End();
   }
 
-
-
-
-
- bool ExampleLayer::CameraKeyControl(Aquarius::KeyPressedEvent& event)
+ bool ExampleLayer::OnKeyPressed(Aquarius::KeyPressedEvent& event)
+ {
+	 if (event.GetKeyCode() == AQ_KEY_Z)
+	 {
+		 auto [x, y] = Aquarius::Input::GetMousePosition();
+		 auto width = Aquarius::Application::Get().GetWindow().GetWidth();
+		 auto height = Aquarius::Application::Get().GetWindow().GetHeight();
+		 auto bounds = m_CameraController.GetBounds();
+		 auto position = m_CameraController.GetCamera().GetPosition();
+		 x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		 y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		 start = { x + position.x, y + position.y ,0.0f };
+	 }
+	 else if (event.GetKeyCode() == AQ_KEY_X)
+	 {
+		 auto [x, y] = Aquarius::Input::GetMousePosition();
+		 auto width = Aquarius::Application::Get().GetWindow().GetWidth();
+		 auto height = Aquarius::Application::Get().GetWindow().GetHeight();
+		 auto bounds = m_CameraController.GetBounds();
+		 auto position = m_CameraController.GetCamera().GetPosition();
+		 x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		 y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		 end = { x + position.x, y + position.y ,0.0f };
+	 }
+	 return false;
+ }
+ bool ExampleLayer::OnWindowResize(Aquarius::WindowResizeEvent& event)
  {
 	 return false;
  }
- bool ExampleLayer::CameraMouseControl(Aquarius::MouseMovedEvent& event)
- {
-	 return false;
- }
-
 
 class  AquariusApp : public Aquarius::Application
 {

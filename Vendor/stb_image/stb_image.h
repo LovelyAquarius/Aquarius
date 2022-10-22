@@ -1,6 +1,9 @@
+#pragma warning(disable: 6262)
+#define STB_IMAGE_IMPLEMENTATION
 
 /* stb_image - v2.27 - public domain image loader - http://nothings.org/stb
-                                  no warranty implied; use at your own risk
+       
+                           no warranty implied; use at your own risk
    Do this:
       #define STB_IMAGE_IMPLEMENTATION
    before you include this file in *one* C or C++ file to create the implementation.

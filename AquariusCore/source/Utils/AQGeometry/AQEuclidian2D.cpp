@@ -5,6 +5,142 @@
 #include <GLM/geometric.hpp>
 #include <GLM/gtx/vector_angle.hpp>
 
+
+namespace Aquarius
+{
+	AQRef<AQQuadraticBezierCurve2D> AQQuadraticBezierCurve2D::Create()
+	{
+		return new AQQuadraticBezierCurve2D();
+	}
+	AQRef<AQQuadraticBezierCurve2D> AQQuadraticBezierCurve2D::Create(const std::string& name)
+	{
+		return  new AQQuadraticBezierCurve2D(name);
+	}
+
+	AQ2DCoord AQQuadraticBezierCurve2D::GetCenter()const
+	{
+		AQ2DCoord sum(0.0f,0.0f);
+		for (int i = 0; i < points.size(); i++)
+		{
+			sum.x += points[0].x;
+			sum.y += points[0].y;
+		}
+		sum.x /= points.size();
+		sum.y /= points.size();
+		return sum;
+	}
+
+	void AQQuadraticBezierCurve2D::SetStartpoint(AQ2DCoord start)
+	{
+		points[0] = start;
+	}
+
+	void AQQuadraticBezierCurve2D::MoveCurve(const AQ2DCoord vector)
+	{
+		for (int i = 0; i < points.size(); i++)
+		{
+			points[i] += vector;
+		}
+
+		for (int i = 0; i < controls.size(); i++)
+		{
+			controls[i] += vector;
+		}
+	}
+
+	void AQQuadraticBezierCurve2D::AddPoint(AQ2DCoord point, AQ2DCoord control)
+	{
+		if (points.size() == controls.size() + 1)
+		{
+			points.emplace_back(point);
+			controls.emplace_back(control);
+		}
+		else
+		{
+			AQ_CORE_WARN("AQQuadraticBezierCurve2D::AddPoint: Failed to AddPoint ,because of the count of linkpoints({0}) does not matches the count of controlpoints({1})，which is from the object '{2}' ", points.size(), controls.size(), this->GetName());
+		}
+	}
+
+	void AQQuadraticBezierCurve2D::Reset()
+	{
+		points.clear();
+		controls.clear();
+		points.resize(1);
+		controls.resize(0);
+	}
+
+
+	AQQuadraticBezierCurve2D::AQQuadraticBezierCurve2D()
+		:points(std::vector<AQ2DCoord>(1)), controls(std::vector<AQ2DCoord>(0))
+	{
+		m_Name = "AQQuadraticBezierCurve2D";
+		m_type = AQObjectType::AQQuadraticBezierCurve2D;
+	}
+
+	AQQuadraticBezierCurve2D::AQQuadraticBezierCurve2D(const std::string& name)
+		: points(std::vector<AQ2DCoord>(1)), controls(std::vector<AQ2DCoord>(0))
+	{
+		m_Name = name;
+		m_type = AQObjectType::AQQuadraticBezierCurve2D;
+	}
+
+	AQRef<AQQuadraticBezierShape2D> AQQuadraticBezierShape2D::Create()
+	{
+		return new AQQuadraticBezierShape2D();
+	}
+
+	AQRef<AQQuadraticBezierShape2D> AQQuadraticBezierShape2D::Create(const std::string& name)
+	{
+		return new AQQuadraticBezierShape2D(name);
+	}
+
+	void AQQuadraticBezierShape2D::AddPoint(AQ2DCoord point, status status)
+	{
+		points.emplace_back(point);
+		st.emplace_back(status);
+	}
+
+	void AQQuadraticBezierShape2D::AddControl(AQ2DCoord control)
+	{
+		controls.emplace_back(control);
+	}
+
+	void AQQuadraticBezierShape2D::Reset()
+	{
+		points.clear();
+		st.clear();
+		controls.clear();
+
+	}
+
+	AQQuadraticBezierShape2D::AQQuadraticBezierShape2D()
+		: points(std::vector<AQ2DCoord>(0)), st(std::vector<status>(0)),controls(std::vector<AQ2DCoord>(0))
+	{
+		m_Name = "AQQuadraticBezierShape2D";
+		m_type = AQObjectType::AQQuadraticBezierShape2D;
+	}
+
+	AQQuadraticBezierShape2D::AQQuadraticBezierShape2D(const std::string& name)
+		: points(std::vector<AQ2DCoord>(0)), st(std::vector<status>(0)), controls(std::vector<AQ2DCoord>(0))
+	{
+		m_Name = name;
+		m_type = AQObjectType::AQQuadraticBezierShape2D;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 namespace Aquarius
 {
 	Point::Point()
