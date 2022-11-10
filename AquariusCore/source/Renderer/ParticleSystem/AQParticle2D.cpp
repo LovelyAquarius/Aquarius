@@ -3,17 +3,16 @@
 #include "core/Application.h"
 #include "core/RandomSystem.h"
 #include "Renderer/Renderer2D.h"
-#include <GLM/gtc/constants.hpp>
-#include <GLM/gtx/compatibility.hpp>
+#include <math.h>
 
 namespace Aquarius
 {
 
 
-	AQParticcle2D::AQParticcle2D(const uint32_t maxparticles)
+	AQParticcle2D::AQParticcle2D(const AQUINT maxparticles)
 	{
 		m_Particles.resize(maxparticles);
-		m_ParticleIndex = m_Particles.size() - 1;
+		m_ParticleIndex = (AQUINT)(m_Particles.size() - 1);
 	}
 
 	void AQParticcle2D::OnUpdate(DeltaTime& dt)
@@ -31,7 +30,7 @@ namespace Aquarius
 				continue;
 			}
 			particle.LifeRemaining -= dt;
-			particle.Position += particle.Velosity * (float)dt;
+			particle.Position += particle.Velosity * (AQFLOAT)dt;
 			particle.Roatation +=20.0f * dt;
 		}
 	}
@@ -45,9 +44,9 @@ namespace Aquarius
 		{
 			if (!particle.Active)
 				continue;
-			float life = particle.LifeRemaining / particle.Lifetime;
-			glm::vec4 color = glm::lerp(particle.EndColor, particle.BeginColor, life);
-			float size = glm::lerp(particle.EndSize, particle.BeginSize, life);
+			AQFLOAT life = particle.LifeRemaining / particle.Lifetime;
+			Eigen::Vector4f color = AQ_Lerp(particle.EndColor, particle.BeginColor, life);
+			AQFLOAT size = AQ_Lerp(particle.EndSize, particle.BeginSize, life);
 
 			Renderer2D::DrawQuad(particle.Position, particle.Roatation, { size, size }, color);
 		}
@@ -63,11 +62,11 @@ namespace Aquarius
 			m_AliveParticleCount++;
 
 			particle.Position = properties.Position;
-			particle.Roatation = AQRandom::Float() * 2.0f * glm::pi<float>();
+			particle.Roatation = (float)(AQRandom::Float() * 2.0f * std::_Pi);
 
 			particle.Velosity = properties.Velosity;
-			particle.Velosity.x += properties.VelosityVariation.x * (AQRandom::Float() - 0.5f);
-			particle.Velosity.y += properties.VelosityVariation.y * (AQRandom::Float() - 0.5f);
+			particle.Velosity.x() += properties.VelosityVariation.x() * (AQRandom::Float() - 0.5f);
+			particle.Velosity.y() += properties.VelosityVariation.y() * (AQRandom::Float() - 0.5f);
 
 			particle.BeginColor = properties.BeginColor;
 			particle.EndColor = properties.EndColor;
@@ -81,7 +80,7 @@ namespace Aquarius
 		if (m_ParticleIndex)
 			m_ParticleIndex--;
 		else
-			m_ParticleIndex = m_Particles.size() - 1;
+			m_ParticleIndex = (AQUINT)(m_Particles.size() - 1);
 
 	/*	m_ParticleIndex = --m_ParticleIndex % m_Particles.size();*/
 

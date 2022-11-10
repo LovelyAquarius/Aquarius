@@ -3,13 +3,7 @@
 #include "Renderer/AQShader.h"
 #include <GLAD/glad.h>
 
-//glm数学依赖项
-#include<GLM/vec2.hpp>
-#include <GLM/vec2.hpp>
-#include <GLM/glm.hpp>
-#include <GLM/ext/matrix_clip_space.hpp>
-#include <GLM/gtc/type_ptr.hpp>
-//___________________-
+
 
 
 namespace Aquarius
@@ -24,20 +18,21 @@ namespace Aquarius
 	public:
 		
 		~AQGLShader();
+		AQGLShader(AQGLShader&) = delete;
 		const GLuint& GetShaderProgram();
 
 		virtual void Bind()const override;
 		virtual void UnBind()const override;
 		virtual void Delete()const override;
 
-		virtual void SetValue(const std::string& name, int value) const override;
-		virtual void SetValue(const std::string& name, int* values, uint32_t count) const override;
-		virtual void SetValue(const std::string& name, float value) const override;
-		virtual void SetValue(const std::string& name, float x, float y, float z) const override;
-		virtual void SetValue(const std::string& name, float x, float y, float z, float w) const override;
-		virtual void SetValue(const std::string& name, const glm::vec3& value)const override;
-		virtual void SetValue(const std::string& name, const glm::vec4& value)const override;
-		virtual void SetValue(const std::string& name, const glm::mat4& value)const override;
+		virtual void SetValue(const std::string& name, AQINT value) const override;
+		virtual void SetValue(const std::string& name, AQINT* values, AQUINT count) const override;
+		virtual void SetValue(const std::string& name, AQFLOAT value) const override;
+		virtual void SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z) const override;
+		virtual void SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z, AQFLOAT w) const override;
+		virtual void SetValue(const std::string& name, const Eigen::Vector3f& value)const override;
+		virtual void SetValue(const std::string& name, const Eigen::Vector4f& value)const override;
+		virtual void SetValue(const std::string& name, const Eigen::Matrix4f& value)const override;
 
 
 
@@ -47,14 +42,14 @@ namespace Aquarius
 
 	private:
 		//输入着色器方法
-		void SetUniformVar(const std::string& name, int value) const;
-		void SetUniformVar(const std::string& name, int* values, uint32_t count) const;
-		void SetUniformVar(const std::string& name, float value) const;
-		void SetUniformVar(const std::string& name, float x, float y, float z) const;
-		void SetUniformVar(const std::string& name, float x, float y, float z, float w) const;
-		void SetUniformVar(const std::string& name, const glm::vec3& value)const;
-		void SetUniformVar(const std::string& name, const glm::vec4& value)const;
-		void SetUniformVar(const std::string& name, const glm::mat4& value)const;
+		void SetUniformVar(const std::string& name, AQINT value) const;
+		void SetUniformVar(const std::string& name, AQINT* values, AQUINT count) const;
+		void SetUniformVar(const std::string& name, AQFLOAT value) const;
+		void SetUniformVar(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z) const;
+		void SetUniformVar(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z, AQFLOAT w) const;
+		void SetUniformVar(const std::string& name, const Eigen::Vector3f& value)const;
+		void SetUniformVar(const std::string& name, const Eigen::Vector4f& value)const;
+		void SetUniformVar(const std::string& name, const Eigen::Matrix4f& value)const;
 
 		
 

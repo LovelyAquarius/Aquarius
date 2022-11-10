@@ -5,7 +5,7 @@
 
 namespace Aquarius
 {
-
+	extern AQUINT s_MaxWindowsize = 8192;
 	OrthgraphicCameraController::OrthgraphicCameraController(float aspectratio, bool ratationenable)
 		:m_AspectRatio(aspectratio), m_RotationEnabled(ratationenable),
 		m_Camera(-m_AspectRatio * m_ZoomLevel, m_AspectRatio* m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel),
@@ -18,27 +18,19 @@ namespace Aquarius
 		//camera控制
 		if (Input::IsKeyPressed(AQ_KEY_A))
 		{
-			m_CameraPosition.x -= glm::cos(glm::radians(m_CameraRotation))* m_CameraMovingSpeed * dt;
-			m_CameraPosition.y -= glm::sin(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_Camera.SetPosition(m_CameraPosition);
+			
 		}
 		else if (Input::IsKeyPressed(AQ_KEY_D))
 		{
-			m_CameraPosition.x += glm::cos(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_CameraPosition.y += glm::sin(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_Camera.SetPosition(m_CameraPosition);
+			
 		}
 		if (Input::IsKeyPressed(AQ_KEY_S))
 		{
-			m_CameraPosition.x += glm::sin(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_CameraPosition.y -= glm::cos(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_Camera.SetPosition(m_CameraPosition);
+			
 		}	
 		else if (Input::IsKeyPressed(AQ_KEY_W))
 		{
-			m_CameraPosition.x -= glm::sin(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_CameraPosition.y += glm::cos(glm::radians(m_CameraRotation)) * m_CameraMovingSpeed * dt;
-			m_Camera.SetPosition(m_CameraPosition);
+			
 		}
 			
 		if (m_RotationEnabled)
@@ -65,6 +57,13 @@ namespace Aquarius
 
 	}
 
+	void OrthgraphicCameraController::OnResize(AQFLOAT width, AQFLOAT height)
+	{
+		m_AspectRatio = width/ height;
+		m_Bounds = { -m_AspectRatio * m_ZoomLevel ,m_AspectRatio * m_ZoomLevel ,-m_ZoomLevel, m_ZoomLevel };
+		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+	}
+
 	bool OrthgraphicCameraController::OnMouseScrolled(MouseScrolledEvent& event)
 	{
 		m_ZoomLevel -= event.GetyOffset()*0.1f;
@@ -77,9 +76,15 @@ namespace Aquarius
 
 	bool OrthgraphicCameraController::OnWindowResized(WindowResizeEvent& event)
 	{
-		m_AspectRatio =(float) (event.GetWidth() / event.GetHeight());
-		m_Bounds = { -m_AspectRatio * m_ZoomLevel ,m_AspectRatio * m_ZoomLevel ,-m_ZoomLevel, m_ZoomLevel };
-		m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		AQUINT width = event.GetWidth();
+		AQUINT height = event.GetHeight();
+		if (width < s_MaxWindowsize && height < s_MaxWindowsize)
+		{
+			m_AspectRatio = (float)width / (float)height;
+			m_Bounds = { -m_AspectRatio * m_ZoomLevel ,m_AspectRatio * m_ZoomLevel ,-m_ZoomLevel, m_ZoomLevel };
+			m_Camera.SetProjection(m_Bounds.Left, m_Bounds.Right, m_Bounds.Bottom, m_Bounds.Top);
+		}
+		
 		return false;
 	}
 

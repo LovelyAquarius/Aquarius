@@ -12,7 +12,7 @@ namespace Aquarius
 	{
 		return new AQQuadraticBezierCurve2D();
 	}
-	AQRef<AQQuadraticBezierCurve2D> AQQuadraticBezierCurve2D::Create(const std::string& name)
+	AQRef<AQQuadraticBezierCurve2D> AQQuadraticBezierCurve2D::Create(const std::string name)
 	{
 		return  new AQQuadraticBezierCurve2D(name);
 	}

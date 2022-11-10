@@ -13,7 +13,7 @@ namespace Aquarius
 	enum class AQObjectType
 	{
 		NoneAQObJ = 0,
-		AQObject = 1,//半抽象考虑删除类型，因为不创建半抽象对象
+		AQObject = 1, AQScene=2, AQElement=3,
 		//渲染组件
 		AQShader = 10, AQGLShader = 11,
 		AQVertexBuffer = 20, AQGLVertexBuffer = 21,
@@ -21,13 +21,15 @@ namespace Aquarius
 		AQVertexArray = 40, AQGLVertexArray = 41,
 		AQTexture = 50, AQTexture2D = 51, AQGLTexture2D=52,
 		AQSubTexture2D=60, AQGLSubTexture2D=61,
+		AQFrameBuffer =70, AQGLFrameBuffer=71,
 		//__________________________________________
 		//几何图形组件
 		AQQuadraticBezierCurve2D =100,
 		AQQuadraticBezierShape2D=110,
 
 		//__________________________________________
-
+		//基本元素
+		AQComponent=1000, AQTransformComponent=1001, AQTagComponent=1002, AQColorComponent=1003, AQCameraComponent=1004, AQNativeScriptComponent=1005,
 
 
 	};
@@ -74,7 +76,7 @@ namespace Aquarius
 			}
 			else
 			{
-				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!")
+				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!");
 			}
 		}
 
@@ -89,7 +91,7 @@ namespace Aquarius
 			}
 			else
 			{
-				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!")
+				AQ_CORE_WARN("AQreference Constuctor::For Some Reason the casting failed,please check the object and type.!");
 			}
 		}
 
@@ -153,6 +155,20 @@ namespace Aquarius
 			return *this;
 		}
 
+		//从各个AQObject子类中的Create函数创建引用
+		//template<typename ...Args>
+		//AQreference(Args&&... args):m_Pointer (T::Create(std::forward<Args>(args)...))
+		//{
+		//	if (m_Pointer)
+		//	{
+		//		((AQObject*)m_Pointer)->ReferenceIncrease();
+		//		Report();
+		//	}
+		//}
+
+
+
+
 		//判断两个引用是否相同
 		bool operator==(const AQreference& r) const { return m_Pointer == r.m_Pointer; }
 
@@ -174,8 +190,10 @@ namespace Aquarius
 		const T& operator*() const { return *m_Pointer; }
 
 	    operator T* () { return m_Pointer; }
-
 		operator const T* ()const { return m_Pointer; }
+
+
+
 
 		T* Get() { return m_Pointer; }
 
@@ -208,8 +226,8 @@ namespace Aquarius
 	AQRef<T> AQRefCast(AQRef<Q>& origin)noexcept
 	{
 		T* p = dynamic_cast<T*>(origin.Get());
-		if(!p)
-			AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!")
+		if (!p)
+			AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!");
 		return p;
 	}
 
@@ -218,7 +236,7 @@ namespace Aquarius
 	{
 		 T* p = const_cast<T*>(dynamic_cast<const T*>(origin.Get()));
 		 if (!p)
-			 AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!")
+			 AQ_CORE_WARN("AQRefCast::For Some Reason the casting failed,please check the object and type.!");
 		return p;
 	}
 

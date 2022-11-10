@@ -7,6 +7,7 @@ class  ExampleLayer :public Aquarius::Layer
 public:
 	ExampleLayer();
 
+	virtual void OnAttach()override;
 	virtual void OnUpdate(Aquarius::DeltaTime& dt)override;
 	virtual void	 OnRender(Aquarius::DeltaTime& dt)override;
 	virtual void OnEvent(Aquarius::BaseEvent& event)override;
@@ -21,6 +22,7 @@ private:
 	Aquarius::AQShaderLibrary m_Shaderlib;
 	Aquarius::AQParticcle2D m_Particle2D;
 	Aquarius::AQParticcle2D::ParticleProperties m_ParticleSetting;
+	Aquarius::AQRef<Aquarius::AQFrameBuffer> m_FrameBuffer;
 	// ————————————————————————————————————————
 	//camera相关属性
 	Aquarius::OrthgraphicCameraController m_CameraController;
@@ -141,6 +143,13 @@ unsigned int square_element[] =
 
  }
 
+ void ExampleLayer::OnAttach()
+ {
+	 Aquarius::AQFrameBufferConfiguration fbconfig;
+	 fbconfig.Width = 1280;
+	 fbconfig.Height = 720;
+	 m_FrameBuffer = Aquarius::AQFrameBuffer::Create(fbconfig);
+ }
  void ExampleLayer::OnUpdate(Aquarius::DeltaTime& dt)
  {
 	 AQ_TIME_MONITOR("ExampleLayer::OnUpdate");
@@ -244,18 +253,16 @@ unsigned int square_element[] =
 	 //清除所有状态
 	 Aquarius::Renderer2D::ResetStatistics();
 	 //__________________________________________________
-	 //初始化渲染
-	 Aquarius::RenderCommand::SetClearcolor({ 0.1f, 0.1f, 0.1f, 1.0f });
-	 Aquarius::RenderCommand::Clear();
-	 //__________________________________________________
 	 //渲染camera
 	 {
 		 AQ_TIME_MONITOR("Renderer2D::Scene");
+		 m_FrameBuffer->Bind();
+		 //初始化渲染
+		 Aquarius::RenderCommand::SetClearcolor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		 Aquarius::RenderCommand::Clear();
+		 //__________________________________________________
 		 Aquarius::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-		 //Aquarius::Renderer2D::DrawQuad({ -0.5f,0.2f ,-0.1 },  0.0f ,{ 10.0f,10.0f }, backpicture, 10.0f);
-		 //Aquarius::Renderer2D::DrawQuad({ -0.0f,0.0f ,-0.0 }, 0.0f, { 1.0f,1.0f }, bilibilipicture);
-		 
 		 if(*(unsigned short*)utf8== *(unsigned short*)utf8_old|| *(unsigned short*)utf8==0)
 		 { }
 		 else
@@ -264,31 +271,15 @@ unsigned int square_element[] =
 			 Aquarius::AQ_UTF8ToUnicode(utf8, unicode);
 			 Aquarius::AQFontAPI::GetAQFontAPI()->GetSinglecharacterBezier(*(unsigned short*)unicode, bezier, 0.001f);
 		 }
-		 //for (int i = 0; i < 2; i++)
-		 //{
-			// glm::vec3 start{ bezier[0]->GetPoints()[i].x,bezier[0]->GetPoints()[i].y,0.0f };
-			// glm::vec3 end{ bezier[0]->GetPoints()[i + 1].x,bezier[0]->GetPoints()[i + 1].y,0.0f };
-			// glm::vec3 control{bezier[0]->GetControls()[i].x,bezier[0]->GetControls()[i].y,0.0f };
-			// Aquarius::Renderer2D::DrawBezier_GPU(start, end, control, 10, red, 5.0f);
-		 //}
-		 
+		
 		 for (int i = 0; i < bezier.size(); i++)
 		 {
 			 Aquarius::Renderer2D::DrawBezier_Line_GPU(bezier[i],20, red,5.0f);
 		 }
-
-		 //Aquarius::Renderer2D::DrawQuad(m_Object_1_position, { 0.8f,0.8f,0.0f },60.0f, { 1.0f,1.0f }, m_Object_2_color);
-		 /*Aquarius::Renderer2D::DrawBezier_GPU({ -0.5f,-0.5f,0.0f }, { 0.5f,0.5f,0.0f }, { -0.5f,0.5f,0.0f }, 20, red,5.0f);*/
-		 
 		 Aquarius::Renderer2D::EndScene();
+		 m_Particle2D.OnRender(m_CameraController.GetCamera());
+		 m_FrameBuffer->UnBind();
 	 }
-	 m_Particle2D.OnRender(m_CameraController.GetCamera());
-	
-	 //testshader->Bind();
-	 //testshader->SetValue("u_VP", m_CameraController.GetCamera().GetViewProjection());
-	 //testvao->Bind();
-	 //glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
-
  }
 
  
@@ -313,6 +304,9 @@ unsigned int square_element[] =
 	 ImGui::Text("相机位置（%f，%f）", m_CameraController.GetCamera().GetPosition().x, m_CameraController.GetCamera().GetPosition().y);
 	 ImGui::Text("ParticleIndex:%d", m_Particle2D.GetParticleIndex());
 	 ImGui::Text("Alive Particle Count:%d", m_Particle2D.GetAliveParticleCount());
+
+	 AQUINT textureid = m_FrameBuffer->GetID();
+	 ImGui::Image((void*)textureid, ImVec2{ 640.0f,360.0f }, ImVec2{0,1},ImVec2{ 1,0 });
 
 
 	 auto stats = Aquarius::Renderer2D::GetStatistics();

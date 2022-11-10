@@ -4,6 +4,7 @@
 #include "RandomSystem.h"
 #include "APPGUI.h"
 #include "Platform/AQOpenGL/GLError.h"
+
 #include "Utils/AQFont/FontAPI.h"
 #include "Renderer/Renderer.h"
 #include "Utils/AQMonitor/AQMonitor.h"
@@ -15,13 +16,14 @@ namespace Aquarius
 	Application* Application::s_Instance = nullptr;
 	std::vector<ProfileMessage> Application::s_profile = std::vector<ProfileMessage>();
 	GraphicAPI RenderAPI::s_GraphicAPI = GraphicAPI::OpenGL;
-	
+
+
 	 std::mt19937 AQRandom::s_RandomEngine;
 	 std::uniform_int_distribution<std::mt19937::result_type> AQRandom::s_Distribution;
 
 
-	Application::Application()
-		
+	Application::Application(std::string name)
+		:m_Window(Window::Create(WindowConfigs(name)))
 	{
 		AQ_CORE_ASSERT(!s_Instance, "Application alreaady exists!");
 		s_Instance = this;
@@ -30,6 +32,7 @@ namespace Aquarius
 		//_______________________________________
 		//初始化渲染器
 		Renderer::Init();
+		//_______________________________________
 		//_______________________________________
 		//创建appgui实例
 		m_GUI = APPGUI::GetAPPGUI();
@@ -83,8 +86,10 @@ namespace Aquarius
 	{
 		if (!Minlized)
 		{
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(dt);
+			for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it)
+			{
+				(*--it)->OnUpdate(dt);
+			}
 		}
 
 	}
@@ -94,8 +99,10 @@ namespace Aquarius
 
 		m_GUI->Begin();
 
-		for (Layer* layer : m_LayerStack)
-			layer->OnImGuiRender();
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it)
+		{
+			(*--it)->OnImGuiRender();
+		}
 
 		m_GUI->End();
 
@@ -150,8 +157,6 @@ namespace Aquarius
 		//____________________________________
 		Minlized = false;
 		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
-		OnUpdate(zerotime);
-		OnRender(zerotime);
 		return false;
 	}
 

@@ -13,7 +13,7 @@ namespace Aquarius
 		Renderer2D::Init();
 	}
 
-	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	void Renderer::OnWindowResize(AQUINT width, AQUINT height)
 	{
 		//临时的，这会影响全局的渲染
 		RenderCommand::SetViewport(0, 0, width, height);
@@ -21,14 +21,14 @@ namespace Aquarius
 
 	void Renderer::BeginScene(const OrthgraphicCamera& camera)
 	{
-		m_SceneData->ViewProjection = camera.GetViewProjection();
+		m_SceneData->ViewProjection = *(Eigen::Matrix4f*)&camera.GetViewProjection();
 	}
 
 	void Renderer::EndScene()
 	{
 	}
 
-	void Renderer::Submit(const AQRef<AQVertexArray>& VAO, const  AQRef<AQShader>& shader, const glm::mat4& transform)
+	void Renderer::Submit(const AQRef<AQVertexArray>& VAO, const  AQRef<AQShader>& shader, const Eigen::Matrix4f& transform)
 	{
 		shader->Bind();
 		shader->SetValue("u_VP", m_SceneData->ViewProjection);

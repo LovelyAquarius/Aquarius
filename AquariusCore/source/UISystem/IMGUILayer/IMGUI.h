@@ -10,7 +10,12 @@ namespace Aquarius
 	{
 	public:
 		IMGUILayer(const std::string name) :Layer(std::string("IMGUI->") + name) {};
-	private:
+
+	public:
+
+		void SetBlockEvents(bool block) { m_BlockEvents = block; }
+	protected:
+		AQBOOL m_BlockEvents = true;
 	};
 
 

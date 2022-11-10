@@ -1,6 +1,9 @@
 #pragma once
 #include "AquariusCore.h"
 #include <string>
+#include "MathSystem/AQEigen.h"
+
+
 
 #include <GLM/glm.hpp>
 #include <GLM/gtc/matrix_transform.hpp>
@@ -9,6 +12,18 @@
 #include <GLM/gtx/compatibility.hpp>
 namespace Aquarius
 {
+	AQFLOAT AQ_DegreeToRadian(AQFLOAT degrees);
+	AQFLOAT AQ_Lerp(const AQFLOAT f1, const AQFLOAT f2, AQFLOAT t);
+	Eigen::Vector3f AQ_Lerp(const Eigen::Vector3f vec1, const Eigen::Vector3f vec2, AQFLOAT t);
+	Eigen::Vector4f AQ_Lerp(const Eigen::Vector4f vec1, const Eigen::Vector4f vec2, AQFLOAT t);
+	Eigen::Matrix4f AQ_Ortho(AQFLOAT left, AQFLOAT right, AQFLOAT bottom, AQFLOAT top, AQFLOAT znear, AQFLOAT zfar);
+	Eigen::Matrix4f AQ_Perspective(float fovy, float aspect, float znear, float zfar);
+	Eigen::Matrix4f& AQ_Scale_Self(Eigen::Matrix4f& mat, Eigen::Vector3f scale);
+	const AQFLOAT AQ_Pi_float();
+}
+namespace Aquarius
+{
+	void AQ_Do_Nothing();
 	std::string AQ_LoadFile(const std::string& filepath);
 	unsigned char* AQ_LoadFile_U8(const std::string& filepath);
 	std::string AQ_ExtractFilename(const std::string& filepath);
@@ -18,9 +33,9 @@ namespace Aquarius
 
 
 
-	glm::vec3 CalculateBezierPosition(const glm::vec3& start, const glm::vec3& end, const glm::vec3& controller, float t);
+	Eigen::Vector3f CalculateBezierPosition(const Eigen::Vector3f& start, const Eigen::Vector3f& end, const Eigen::Vector3f& controller, AQFLOAT t);
 	float CalculateBezierCurvity(const glm::vec3& start, const glm::vec3& end, const glm::vec3& controller, const float t);
-	float* CalculateBezierCurve(const glm::vec3& start, const glm::vec3& end, const glm::vec3& controller, uint32_t count);
+	float* CalculateBezierCurve(const Eigen::Vector3f& start, const Eigen::Vector3f& end, const Eigen::Vector3f& controller, AQUINT count);
 	 
 
 }

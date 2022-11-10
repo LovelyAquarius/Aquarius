@@ -1,7 +1,9 @@
 #pragma once
 #include "core/AquariusCore.h"
 #include "core/AQObject.h"
-#include <GLM/glm.hpp>
+
+#include "MathSystem/AQEigen.h"
+
 namespace Aquarius
 {
 	class Renderer;
@@ -20,14 +22,14 @@ namespace Aquarius
 		virtual void UnBind() const = 0;
 		virtual void Delete()const = 0;
 
-		virtual void SetValue(const std::string& name, int value) const = 0;
-		virtual void SetValue(const std::string& name, int* values, uint32_t count) const = 0;
-		virtual void SetValue(const std::string& name, float value) const=0;
-		virtual void SetValue(const std::string& name, float x, float y, float z) const=0;
-		virtual void SetValue(const std::string& name, float x, float y, float z, float w) const=0;
-		virtual void SetValue(const std::string& name, const glm::vec3& value)const=0;
-		virtual void SetValue(const std::string& name, const glm::vec4& value)const=0;
-		virtual void SetValue(const std::string& name, const glm::mat4& value)const=0;
+		virtual void SetValue(const std::string& name, AQINT value) const = 0;
+		virtual void SetValue(const std::string& name, AQINT* values, AQUINT count) const = 0;
+		virtual void SetValue(const std::string& name, AQFLOAT value) const=0;
+		virtual void SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z) const=0;
+		virtual void SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z, AQFLOAT w) const=0;
+		virtual void SetValue(const std::string& name, const Eigen::Vector3f& value)const=0;
+		virtual void SetValue(const std::string& name, const Eigen::Vector4f& value)const=0;
+		virtual void SetValue(const std::string& name, const Eigen::Matrix4f& value)const=0;
 
 	protected:
 		AQShader() { m_type = AQObjectType::AQShader; }

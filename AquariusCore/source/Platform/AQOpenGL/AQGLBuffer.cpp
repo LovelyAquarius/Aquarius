@@ -5,7 +5,7 @@
 namespace Aquarius
 
 {
-	AQGLVertexBuffer::AQGLVertexBuffer(const AQBufferLayout& layout, int datasize, const void* data, int datahandledtype, const std::string& name)
+	AQGLVertexBuffer::AQGLVertexBuffer(const AQBufferLayout& layout, AQUINT datasize, const void* data, AQINT datahandledtype, const std::string& name)
 		:m_VBO(0), m_Buffersize(datasize)
 	{
 		if (name.size())
@@ -18,7 +18,7 @@ namespace Aquarius
 		GLCALL(glBufferData(GL_ARRAY_BUFFER, datasize, data, datahandledtype));
 		SetLayout(layout);
 	}
-	AQGLVertexBuffer::AQGLVertexBuffer(uint32_t datasize, const std::string& name)
+	AQGLVertexBuffer::AQGLVertexBuffer(AQUINT datasize, const std::string& name)
 		:m_VBO(0), m_Buffersize(datasize)
 	{
 		if (name.size())
@@ -31,7 +31,7 @@ namespace Aquarius
 		GLCALL(glBufferData(GL_ARRAY_BUFFER, datasize, nullptr, GL_DYNAMIC_DRAW));
 
 	}
-	AQGLVertexBuffer::AQGLVertexBuffer(int datasize, const void* data, int datahandledtype, const std::string& name)
+	AQGLVertexBuffer::AQGLVertexBuffer(AQUINT datasize, const void* data, AQINT datahandledtype, const std::string& name)
 		:m_VBO(0), m_Buffersize(datasize)
 	{
 		if (name.size())
@@ -45,17 +45,17 @@ namespace Aquarius
 	}
 
 
-	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(int datasize, const void* data, int datahandledtype, std::string name)
+	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(AQUINT datasize, const void* data, AQINT datahandledtype, const std::string& name)
 	{
 		return new AQGLVertexBuffer(datasize, data, datahandledtype, name);
 	}
 
-	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(const AQBufferLayout& layout, int datasize, const void* data, int datahandledtype, std::string name)
+	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(const AQBufferLayout& layout, AQUINT datasize, const void* data, AQINT datahandledtype, const std::string& name)
 	{
 		return new AQGLVertexBuffer(layout, datasize, data, datahandledtype, name);
 	}
 
-	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(uint32_t datasize, std::string name)
+	AQRef<AQVertexBuffer> AQGLVertexBuffer::Create(AQUINT datasize, const std::string& name)
 	{
 		return new AQGLVertexBuffer(datasize, name);
 	}
@@ -83,7 +83,7 @@ namespace Aquarius
 			GLCALL(glDeleteBuffers(1, &m_VBO));
 	}
 
-	void AQGLVertexBuffer::SetData(const void* data, uint32_t datasize)
+	void AQGLVertexBuffer::SetData(const void* data, AQUINT datasize)
 	{
 
 		GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
@@ -104,7 +104,7 @@ namespace Aquarius
 namespace Aquarius
 {
 
-	AQRef<AQVertexArray> AQGLVertexArray::Create(const std::string name)
+	AQRef<AQVertexArray> AQGLVertexArray::Create(const std::string& name)
 	{
 		return new AQGLVertexArray(name);
 	}
@@ -202,7 +202,7 @@ namespace Aquarius
 
 namespace Aquarius
 {
-	AQGLElementBuffer::AQGLElementBuffer(uint32_t elementcount, const void* data, int datahandledtype, const std::string& name)
+	AQGLElementBuffer::AQGLElementBuffer(AQUINT elementcount, const void* data, int datahandledtype, const std::string& name)
 	{
 		if (name.size())
 			m_Name = name;
@@ -217,7 +217,7 @@ namespace Aquarius
 	}
 
 
-	AQRef<AQElementBuffer> AQGLElementBuffer::Create(uint32_t elementcount, const void* data, int datahandledtype, std::string name)
+	AQRef<AQElementBuffer> AQGLElementBuffer::Create(AQUINT elementcount, const void* data, int datahandledtype, const std::string& name)
 	{
 		return new AQGLElementBuffer(elementcount, data, datahandledtype, name);
 	}

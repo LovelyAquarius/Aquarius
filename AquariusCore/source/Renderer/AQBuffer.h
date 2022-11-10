@@ -3,6 +3,8 @@
 #include "core/AQObject.h"
 #include "AQBufferLayout.h"
 #include "Platform/AQOpenGL/GLError.h"
+
+
 namespace Aquarius
 {
 	class AQVertexArray;
@@ -13,15 +15,15 @@ namespace Aquarius
 	class AQUARIUS_API AQVertexBuffer:public AQObject
 	{
 	public:
-		static AQRef<AQVertexBuffer> Create(uint32_t datasize, const std::string name = "");
-		static AQRef<AQVertexBuffer> Create(int datasize, const void* data, int datahandledtype, const std::string name = "");
-		static AQRef<AQVertexBuffer> Create(const AQBufferLayout& layout,int datasize, const void* data, int datahandledtype,const std::string name = "");
+		static AQRef<AQVertexBuffer> Create(AQUINT datasize, const std::string name = "");
+		static AQRef<AQVertexBuffer> Create(AQUINT datasize, const void* data, AQINT datahandledtype, const std::string name = "");
+		static AQRef<AQVertexBuffer> Create(const AQBufferLayout& layout, AQUINT datasize, const void* data, AQINT datahandledtype,const std::string name = "");
 		static AQObjectType ClassType() { return AQObjectType::AQVertexBuffer; }
 	public:
 		virtual void Bind() const=0;
 		virtual void UnBind() const=0;
 		virtual void Delete()const=0;
-		virtual void SetData(const void* data, uint32_t datasize ) = 0;
+		virtual void SetData(const void* data, AQUINT datasize ) = 0;
 
 
 		virtual  const AQBufferLayout& GetLayout()const=0;
@@ -30,15 +32,13 @@ namespace Aquarius
 
 	protected:
 		AQVertexBuffer() { m_type = AQObjectType::AQVertexBuffer; }
-	protected:
-		AQBufferLayout m_Layout;
 	};
 
 
 	class AQUARIUS_API AQElementBuffer :public AQObject
 	{
 	public:
-		static  AQRef<AQElementBuffer>  Create(uint32_t elementcount, const void* data, int datahandledtype, const std::string name = "");
+		static  AQRef<AQElementBuffer>  Create(AQUINT elementcount, const void* data, AQINT datahandledtype, const std::string name = "");
 		static AQObjectType ClassType() { return AQObjectType::AQElementBuffer; }
 	public:
 

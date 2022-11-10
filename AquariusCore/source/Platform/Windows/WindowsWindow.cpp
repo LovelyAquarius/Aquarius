@@ -1,17 +1,19 @@
 #include"AQPCH.h"
-
 #include "Platform/Windows/WindowsWindow.h"
 #include"EventSystem/ApplicationEvent.h"
 #include "EventSystem/KeyEvent.h"
 #include "EventSystem/MouseEvent.h"
 #include "core/Log.h"
+#include"Renderer/RenderCommand.h"
 
+
+#include "core/Application.h"
 
 namespace Aquarius
 {
 
 	static bool s_GLFWInitialized = false;
-
+	static AQUINT s_MaxWindowsize = 8192;
 
 	static void GLFWErrorCallback(int error, const char* descripition)
 	{
@@ -73,7 +75,6 @@ namespace Aquarius
 		SetSync(true);
 
 
-
 		glfwSetWindowSizeCallback(m_Window,
 			[](GLFWwindow* window, int width, int height)
 			{
@@ -84,8 +85,20 @@ namespace Aquarius
 				data.Height = height;
 				WindowResizeEvent event(width, height);
 				data.EventCallBack(event);
-			});
 
+				{
+					float time = (float)glfwGetTime();
+					DeltaTime dt = time - Application::Get().GetLastframeTime();
+					Application::Get().GetLastframeTime() = time;
+					if (dt > 20)
+						dt = 0;
+					Application::Get().OnUpdate(dt);
+					Application::Get().OnRender(dt);
+					Application::Get().OnGUIRender();
+					Application::Get().GetWindow().OnUpdade();
+				}
+
+			});
 
 
 
@@ -127,11 +140,13 @@ namespace Aquarius
 				}
 			});
 
+
+
+
 		glfwSetMouseButtonCallback(m_Window,
 			[](GLFWwindow* window, int button, int action, int mods)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
 				switch (action)
 				{
 				case GLFW_PRESS:
@@ -201,6 +216,7 @@ namespace Aquarius
 		m_Context->SwapBuffers();
 
 	}
+
 
 
 	void WindowsWindow::SetSync(bool enabled)

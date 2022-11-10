@@ -26,7 +26,6 @@ namespace Aquarius
 		virtual ~Window() {}
 
 		virtual void OnUpdade() = 0;
-
 		virtual AQUINT GetWidth() const = 0;
 		virtual AQUINT GetHeight() const = 0;
 

@@ -34,6 +34,9 @@ namespace Aquarius
         ImGui_ImplOpenGL3_Init(glsl_version);
 
 
+        
+
+
 	}
 
 	void APPGUI::OnDetach()
@@ -82,10 +85,15 @@ namespace Aquarius
 
     void APPGUI::OnEvent(BaseEvent& event)
     {
+        if (m_BlockEvents)
+        {
+            ImGuiIO& io = ImGui::GetIO();
+            event.m_Handled |= event.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+            event.m_Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        }
+
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<KeyPressedEvent>(AQ_BIND_EVENT_FN(APPGUI::OnSpaceButtonPressed));
-
-
     }
 
 

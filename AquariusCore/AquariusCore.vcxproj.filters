@@ -25,6 +25,9 @@
     <Filter Include="source\EventSystem">
       <UniqueIdentifier>{2C263A74-180A-FBC9-816A-F51C6D6DE54B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\MathSystem">
+      <UniqueIdentifier>{F4586CB2-606F-6A48-A9E6-F569153C3BD0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="source\Platform">
       <UniqueIdentifier>{8A00977C-F68B-0441-FF9C-87356BA76041}</UniqueIdentifier>
     </Filter>
@@ -37,6 +40,24 @@
     <Filter Include="source\Renderer">
       <UniqueIdentifier>{DC077457-4893-E11B-51A4-6410BDAE3D1C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\Renderer\ParticleSystem">
+      <UniqueIdentifier>{44FA9CE7-3020-674E-1966-EC19052B8C1A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Scene">
+      <UniqueIdentifier>{13AD4E11-FF0F-DEB5-A895-166C94D7A938}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Scene\ElementSystem">
+      <UniqueIdentifier>{71CA9D0C-5DDA-49DD-C693-AEFBB2C23876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Scene\ElementSystem\AQComponents">
+      <UniqueIdentifier>{18E649CC-8475-0BB7-8D71-ECCEF97F46C3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\ScriptSystem">
+      <UniqueIdentifier>{1F7C0A94-8BDD-E7A1-144B-2E5480AB1E61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\ScriptSystem\CoreScripts">
+      <UniqueIdentifier>{DF456B36-4B29-7A76-542C-A8B2C08E40C7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="source\UISystem">
       <UniqueIdentifier>{C8506373-34DC-D037-3DED-532CA9F72C38}</UniqueIdentifier>
     </Filter>
@@ -48,6 +69,9 @@
     </Filter>
     <Filter Include="source\Utils">
       <UniqueIdentifier>{56417C11-42A4-0BB6-EB29-446CD76BD738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\Utils\AQFont">
+      <UniqueIdentifier>{0E2799E2-7A88-76F0-03F6-BCA26F56ADAF}</UniqueIdentifier>
     </Filter>
     <Filter Include="source\Utils\AQGeometry">
       <UniqueIdentifier>{634F5D36-CF86-A5CD-D890-09F14447CCC6}</UniqueIdentifier>
@@ -78,10 +102,16 @@
     <ClInclude Include="source\EventSystem\MouseEvent.h">
       <Filter>source\EventSystem</Filter>
     </ClInclude>
+    <ClInclude Include="source\MathSystem\AQEigen.h">
+      <Filter>source\MathSystem</Filter>
+    </ClInclude>
     <ClInclude Include="source\Platform\AQOpenGL\AQGLBuffer.h">
       <Filter>source\Platform\AQOpenGL</Filter>
     </ClInclude>
     <ClInclude Include="source\Platform\AQOpenGL\AQGLContext.h">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Platform\AQOpenGL\AQGLFrameBuffer.h">
       <Filter>source\Platform\AQOpenGL</Filter>
     </ClInclude>
     <ClInclude Include="source\Platform\AQOpenGL\AQGLShader.h">
@@ -108,6 +138,12 @@
     <ClInclude Include="source\Renderer\AQBufferLayout.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="source\Renderer\AQCamera.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Renderer\AQFrameBuffer.h">
+      <Filter>source\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="source\Renderer\AQShader.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
@@ -120,6 +156,9 @@
     <ClInclude Include="source\Renderer\OrthgraphicCameraController.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="source\Renderer\ParticleSystem\AQParticle2D.h">
+      <Filter>source\Renderer\ParticleSystem</Filter>
+    </ClInclude>
     <ClInclude Include="source\Renderer\RenderAPI.h">
       <Filter>source\Renderer</Filter>
     </ClInclude>
@@ -131,6 +170,42 @@
     </ClInclude>
     <ClInclude Include="source\Renderer\Renderer2D.h">
       <Filter>source\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\AQEntity.h">
+      <Filter>source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\AQScene.h">
+      <Filter>source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\AQSceneCamera.h">
+      <Filter>source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\AQScriptableEntity.h">
+      <Filter>source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponent.h">
+      <Filter>source\Scene\ElementSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponents\AQCameraComponent.h">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponents\AQColorComponent.h">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponents\AQNativeScriptComponent.h">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponents\AQTagComponent.h">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQComponents\AQTransformComponent.h">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Scene\ElementSystem\AQElement.h">
+      <Filter>source\Scene\ElementSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="source\ScriptSystem\CoreScripts\AQCameraController.h">
+      <Filter>source\ScriptSystem\CoreScripts</Filter>
     </ClInclude>
     <ClInclude Include="source\UISystem\AQGUI\AQGUI.h">
       <Filter>source\UISystem\AQGUI</Filter>
@@ -146,6 +221,15 @@
     </ClInclude>
     <ClInclude Include="source\UISystem\IMGUILayer\IMGUI.h">
       <Filter>source\UISystem\IMGUILayer</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\AQFont\AQTextImage.h">
+      <Filter>source\Utils\AQFont</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\AQFont\FontAPI.h">
+      <Filter>source\Utils\AQFont</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Utils\AQFont\STBTureTypeAPI.h">
+      <Filter>source\Utils\AQFont</Filter>
     </ClInclude>
     <ClInclude Include="source\Utils\AQGeometry\AQEuclidian2D.h">
       <Filter>source\Utils\AQGeometry</Filter>
@@ -189,6 +273,9 @@
     <ClInclude Include="source\core\Log.h">
       <Filter>source\core</Filter>
     </ClInclude>
+    <ClInclude Include="source\core\RandomSystem.h">
+      <Filter>source\core</Filter>
+    </ClInclude>
     <ClInclude Include="source\core\TimeSystem.h">
       <Filter>source\core</Filter>
     </ClInclude>
@@ -198,11 +285,6 @@
     <ClInclude Include="source\core\entrypoint.h">
       <Filter>source\core</Filter>
     </ClInclude>
-    <ClInclude Include="source\Renderer\ParticleSystem\AQParticle2D.h" />
-    <ClInclude Include="source\core\RandomSystem.h" />
-    <ClInclude Include="source\Utils\AQFont\AQTextImage.h" />
-    <ClInclude Include="source\Utils\AQFont\FontAPI.h" />
-    <ClInclude Include="source\Utils\AQFont\STBTureTypeAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Vendor\OpenGL\GLAD\glad.c">
@@ -218,6 +300,9 @@
       <Filter>source\Platform\AQOpenGL</Filter>
     </ClCompile>
     <ClCompile Include="source\Platform\AQOpenGL\AQGLContext.cpp">
+      <Filter>source\Platform\AQOpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Platform\AQOpenGL\AQGLFrameBuffer.cpp">
       <Filter>source\Platform\AQOpenGL</Filter>
     </ClCompile>
     <ClCompile Include="source\Platform\AQOpenGL\AQGLShader.cpp">
@@ -244,6 +329,12 @@
     <ClCompile Include="source\Renderer\AQBufferLayout.cpp">
       <Filter>source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="source\Renderer\AQCamera.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\AQFrameBuffer.cpp">
+      <Filter>source\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="source\Renderer\AQTexture.cpp">
       <Filter>source\Renderer</Filter>
     </ClCompile>
@@ -255,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="source\Renderer\OrthgraphicCameraController.cpp">
       <Filter>source\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Renderer\ParticleSystem\AQParticle2D.cpp">
+      <Filter>source\Renderer\ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="source\Renderer\RenderAPI.cpp">
       <Filter>source\Renderer</Filter>
@@ -268,6 +362,42 @@
     <ClCompile Include="source\Renderer\Renderer2D.cpp">
       <Filter>source\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="source\Scene\AQEntity.cpp">
+      <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\AQScene.cpp">
+      <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\AQSceneCamera.cpp">
+      <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\AQScriptableEntity.cpp">
+      <Filter>source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponent.cpp">
+      <Filter>source\Scene\ElementSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponents\AQCameraComponent.cpp">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponents\AQColorComponent.cpp">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponents\AQNativeScriptComponent.cpp">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponents\AQTagComponent.cpp">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQComponents\AQTransformComponent.cpp">
+      <Filter>source\Scene\ElementSystem\AQComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Scene\ElementSystem\AQElement.cpp">
+      <Filter>source\Scene\ElementSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="source\ScriptSystem\CoreScripts\AQCameraController.cpp">
+      <Filter>source\ScriptSystem\CoreScripts</Filter>
+    </ClCompile>
     <ClCompile Include="source\UISystem\AQGUI\AQGUI.cpp">
       <Filter>source\UISystem\AQGUI</Filter>
     </ClCompile>
@@ -279,6 +409,15 @@
     </ClCompile>
     <ClCompile Include="source\UISystem\IMGUILayer\IMGUI.cpp">
       <Filter>source\UISystem\IMGUILayer</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\AQFont\AQTextImage.cpp">
+      <Filter>source\Utils\AQFont</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\AQFont\FontAPI.cpp">
+      <Filter>source\Utils\AQFont</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Utils\AQFont\STBTureTypeAPI.cpp">
+      <Filter>source\Utils\AQFont</Filter>
     </ClCompile>
     <ClCompile Include="source\Utils\AQGeometry\AQEuclidian2D.cpp">
       <Filter>source\Utils\AQGeometry</Filter>
@@ -310,10 +449,8 @@
     <ClCompile Include="source\core\Log.cpp">
       <Filter>source\core</Filter>
     </ClCompile>
-    <ClCompile Include="source\core\TimeSystem.cpp" />
-    <ClCompile Include="source\Renderer\ParticleSystem\AQParticle2D.cpp" />
-    <ClCompile Include="source\Utils\AQFont\AQTextImage.cpp" />
-    <ClCompile Include="source\Utils\AQFont\STBTureTypeAPI.cpp" />
-    <ClCompile Include="source\Utils\AQFont\FontAPI.cpp" />
+    <ClCompile Include="source\core\TimeSystem.cpp">
+      <Filter>source\core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

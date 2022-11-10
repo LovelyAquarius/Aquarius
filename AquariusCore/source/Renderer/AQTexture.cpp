@@ -30,7 +30,7 @@ namespace Aquarius
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
 		return nullptr;
 	}
-	AQRef<AQTexture2D> AQTexture2D::Create(const std::string name, uint32_t width, uint32_t height)
+	AQRef<AQTexture2D> AQTexture2D::Create(const std::string name, AQUINT width, AQUINT height)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -42,7 +42,7 @@ namespace Aquarius
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
 		return nullptr;
 	}
-	AQRef<AQSubTexture2D> AQSubTexture2D::Create(const std::string& name, const AQRef<AQTexture2D>& texture, const glm::vec2& subsize, const glm::vec2& subcoordindex)
+	AQRef<AQSubTexture2D> AQSubTexture2D::Create(const std::string name, const AQRef<AQTexture2D>& texture, const Eigen::Vector2f& subsize, const Eigen::Vector2f& subcoordindex)
 	{
 		
 		switch (Renderer::GetGraphicAPI())
@@ -63,7 +63,7 @@ namespace Aquarius
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
 		return nullptr;
 	}
-	AQRef<AQSubTexture2D> AQSubTexture2D::Create(const AQRef<AQTexture2D>& texture, const glm::vec2& subsize, const glm::vec2& subcoordindex)
+	AQRef<AQSubTexture2D> AQSubTexture2D::Create(const AQRef<AQTexture2D>& texture, const Eigen::Vector2f& subsize, const Eigen::Vector2f& subcoordindex)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{

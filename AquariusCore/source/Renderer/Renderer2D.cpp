@@ -1,8 +1,8 @@
 #include "AQPCH.h"
 #include "Renderer2D.h"
 #include "Platform/AQOpenGL/AQGLBuffer.h"
-#include <GLM/gtc/matrix_transform.hpp>
 #include "Platform/AQOpenGL/AQGLTexture.h"
+
 namespace Aquarius
 {
 	static Renderer2DData* s_Data2D;
@@ -15,8 +15,8 @@ namespace Aquarius
 		Init_QuadVertex2D();
 		//________________________________________________
 		//创建自定义数据
-		Init_LineVertex2D();
-		Init_QudraticBezierUnit2D();
+		/*Init_LineVertex2D();
+		Init_QudraticBezierUnit2D();*/
 		//_______________________________________________________
 	}
 
@@ -39,16 +39,31 @@ namespace Aquarius
 		for (auto& subdata : s_Data2D->OnUses)
 		{
 			//为着色器传入相机VP参数
-			PassCameraVPIntoShader(camera,subdata);
+			PassCameraVPIntoShader(camera.GetViewProjection(), subdata);
 			//重置各个绘图子数据缓冲
 			ResetSubData(subdata);
 		}
 	}
 
+	void Renderer2D::BeginScene(AQCamera& camera, const Eigen::Matrix4f& transform)
+	{
+		Eigen::Matrix4f VP = camera.GetProjection() * transform.inverse();
+
+		for (auto& subdata : s_Data2D->OnUses)
+		{
+			//为着色器传入相机VP参数
+			PassCameraVPIntoShader(VP, subdata);
+			//重置各个绘图子数据缓冲
+			ResetSubData(subdata);
+		}
+
+
+	}
+
 	void Renderer2D::Flush()
 	{
 		//绑定可用纹理槽
-		for (uint32_t i = 0; i < s_Data2D->CommonTexture2D->TextureSlotIndex; i++)
+		for (AQUINT i = 0; i < s_Data2D->CommonTexture2D->TextureSlotIndex; i++)
 			s_Data2D->CommonTexture2D->TextureSlots[i]->BindSlot(i);
 		//_________________________________________________
 		//DrawCall
@@ -75,87 +90,110 @@ namespace Aquarius
 	}
 
 	//DrawQuad___________________________________________________________________
-	void Renderer2D::DrawQuad(const glm::vec2& position, const float  rotation, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const Eigen::Vector2f& position, const AQFLOAT  rotation, const Eigen::Vector2f& size, const Eigen::Vector4f& color)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, rotation ,size, color);
+		
+		DrawQuad(Eigen::Vector3f(position.x(), position.y(), 0.0f), rotation, size, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const float  rotation, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const Eigen::Vector3f& position, const AQFLOAT  rotation, const Eigen::Vector2f& size, const Eigen::Vector4f& color)
 	{
 
 		const float textureindex = 0.0f;//这是纯白像素！
 		constexpr float tilingfactor = 1.0f;
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
-			glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f,0.0f,1.0f }) *
-			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
+		Eigen::Transform<AQFLOAT, 3, Eigen::Affine> transform;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, transform.matrix());
+		AQ_Scale_Self(transform.matrix(), Eigen::Vector3f(size.x(), size.y(), 1.0f));
+		transform.rotate(Eigen::AngleAxis<AQFLOAT>(AQ_DegreeToRadian(rotation), Eigen::Vector3f(0.0f, 0.0f, 1.0f)));
+		transform.translate(position);
+
+
+
+		SetQuadDataToVertexBuffer(transform.matrix(), color, textureindex, tilingfactor);
+
+		s_Data2D->QuadVertex2D->IsDrawing = true;
+	}
+
+	void Renderer2D::DrawQuad(const Eigen::Matrix4f& transform, const Eigen::Vector4f& color)
+	{
+		const float textureindex = 0.0f;//这是纯白像素！
+		constexpr float tilingfactor = 1.0f;
 		SetQuadDataToVertexBuffer(transform, color, textureindex, tilingfactor);
 
 		s_Data2D->QuadVertex2D->IsDrawing = true;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec3& aboutpoint, const float  rotation, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const Eigen::Vector3f& position, const Eigen::Vector3f& aboutpoint, const AQFLOAT  rotation, const Eigen::Vector2f& size, const Eigen::Vector4f& color)
 	{
 		const float textureindex = 0.0f;//这是纯白像素！
 		constexpr float tilingfactor = 10.0f;
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position + aboutpoint) *
-			glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f,0.0f,1.0f }) *
-			glm::translate(glm::mat4(1.0f), -aboutpoint)*
-			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		SetQuadDataToVertexBuffer(transform, color, textureindex, tilingfactor);
+		Eigen::Transform<AQFLOAT, 3, Eigen::Affine> transform;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, transform.matrix());
+		AQ_Scale_Self(transform.matrix(), Eigen::Vector3f(size.x(), size.y(), 1.0f));
+		transform.translate(-aboutpoint);
+		transform.rotate(Eigen::AngleAxis<AQFLOAT>(AQ_DegreeToRadian(rotation), Eigen::Vector3f(0.0f, 0.0f, 1.0f)));
+		transform.translate(position + aboutpoint);
+
+		SetQuadDataToVertexBuffer(transform.matrix(), color, textureindex, tilingfactor);
 
 		s_Data2D->QuadVertex2D->IsDrawing = true;
 	}
 
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const float  rotation, const glm::vec2& size, const AQRef<AQTexture2D>& texture, float tilingfactor)
+	void Renderer2D::DrawQuad(const Eigen::Vector2f& position, const AQFLOAT  rotation, const Eigen::Vector2f& size, const AQRef<AQTexture2D>& texture, AQFLOAT tilingfactor)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, rotation, size, texture, tilingfactor);
+		DrawQuad(Eigen::Vector3f(position.x(), position.y(), 0.0f), rotation, size, texture, tilingfactor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const float  rotation, const glm::vec2& size, const AQRef<AQTexture2D>& texture, float tilingfactor)
+	void Renderer2D::DrawQuad(const Eigen::Vector3f& position, const AQFLOAT  rotation, const Eigen::Vector2f& size, const AQRef<AQTexture2D>& texture, AQFLOAT tilingfactor)
 	{
-		constexpr glm::vec4 color{ 1.0f,1.0f,1.0f,1.0f };
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
-			glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f,0.0f,1.0f }) *
-			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		const Eigen::Vector4f color{ 1.0f,1.0f,1.0f,1.0f };
 
-		uint32_t textureindex = MatchTextureIndex(texture);
+		Eigen::Transform<AQFLOAT, 3, Eigen::Affine> transform;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, transform.matrix());
+		AQ_Scale_Self(transform.matrix(), Eigen::Vector3f(size.x(), size.y(), 1.0f));
+		transform.rotate(Eigen::AngleAxis<AQFLOAT>(AQ_DegreeToRadian(rotation), Eigen::Vector3f(0.0f, 0.0f, 1.0f)));
+		transform.translate(position);
+
+		AQUINT textureindex = MatchTextureIndex(texture);
 		if (!textureindex)
 		{
 			textureindex = s_Data2D->CommonTexture2D->TextureSlotIndex;
 			s_Data2D->CommonTexture2D->TextureSlots[s_Data2D->CommonTexture2D->TextureSlotIndex] = texture;
 			s_Data2D->CommonTexture2D->TextureSlotIndex++;
 		}
-		SetQuadDataToVertexBuffer(transform ,color,(float)textureindex, tilingfactor);
+		SetQuadDataToVertexBuffer(transform.matrix(), color, (float)textureindex, tilingfactor);
 
 		s_Data2D->QuadVertex2D->IsDrawing = true;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec3& aboutpoint, const float  rotation, const glm::vec2& size, const AQRef<AQTexture2D>& texture, float tilingfactor)
+	void Renderer2D::DrawQuad(const Eigen::Vector3f& position, const Eigen::Vector3f& aboutpoint, const AQFLOAT  rotation, const Eigen::Vector2f& size, const AQRef<AQTexture2D>& texture, AQFLOAT tilingfactor)
 	{
-		constexpr glm::vec4 color{ 1.0f,1.0f,1.0f,1.0f };
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position + aboutpoint) *
-			glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f,0.0f,1.0f }) *
-			glm::translate(glm::mat4(1.0f), -aboutpoint) *
-			glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		const Eigen::Vector4f color{ 1.0f,1.0f,1.0f,1.0f };
 
-		uint32_t textureindex = MatchTextureIndex(texture);
+		Eigen::Transform<AQFLOAT, 3, Eigen::Affine> transform;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, transform.matrix());
+		AQ_Scale_Self(transform.matrix(), Eigen::Vector3f(size.x(), size.y(), 1.0f));
+		transform.rotate(Eigen::AngleAxis<AQFLOAT>(AQ_DegreeToRadian(rotation), Eigen::Vector3f(0.0f, 0.0f, 1.0f)));
+		transform.translate(position);
+
+		AQUINT textureindex = MatchTextureIndex(texture);
 		if (!textureindex)
 		{
 			textureindex = s_Data2D->CommonTexture2D->TextureSlotIndex;
 			s_Data2D->CommonTexture2D->TextureSlots[s_Data2D->CommonTexture2D->TextureSlotIndex] = texture;
 			s_Data2D->CommonTexture2D->TextureSlotIndex++;
 		}
-		SetQuadDataToVertexBuffer(transform, color, (float)textureindex, tilingfactor);
+		SetQuadDataToVertexBuffer(transform.matrix(), color, (float)textureindex, tilingfactor);
 
 		s_Data2D->QuadVertex2D->IsDrawing = true;
 	}
 	//_________________________________________________________________________________________________________
 	
 	//DrawBezier___________________________________________________________________________________________
-	void Renderer2D::DrawBezier_Line_CPU(const glm::vec3& startpoint, const glm::vec3& endpoint, const glm::vec3& controlpoint, uint32_t count, const glm::vec4& color)
+	void Renderer2D::DrawBezier_Line_CPU(const Eigen::Vector3f& startpoint, const Eigen::Vector3f& endpoint, const Eigen::Vector3f& controlpoint, AQUINT count, const Eigen::Vector4f& color)
 	{
 		if (!s_Data2D->LineVertex2D)
 		{
@@ -163,7 +201,7 @@ namespace Aquarius
 			return;
 		}
 		//检查Line缓冲区是否已满
-		uint32_t linevertexcount = 0;
+		AQUINT linevertexcount = 0;
 		for (auto& elementcount : s_Data2D->LineVertex2D->LineElementCounts)
 		{ 
 			linevertexcount += elementcount;
@@ -174,7 +212,7 @@ namespace Aquarius
 
 		float step = 1.0f / (float)count;
 		float t = 0.0f;
-		for (uint32_t index = 0; index < count; index ++)
+		for (AQUINT index = 0; index < count; index ++)
 		{
 			s_Data2D->LineVertex2D->LineVertexPointer->Position = CalculateBezierPosition(startpoint, endpoint, controlpoint, t);
 			s_Data2D->LineVertex2D->LineVertexPointer->Color = color;
@@ -185,17 +223,17 @@ namespace Aquarius
 		s_Data2D->Statistics.LineVertexCount += count;
 		s_Data2D->LineVertex2D->IsDrawing = true;
 	}
-	void Renderer2D::DrawBezier_Line_CPU(const AQRef<AQQuadraticBezierCurve2D>& beziercurve, uint32_t count, const glm::vec4& color)
+	void Renderer2D::DrawBezier_Line_CPU(const AQRef<AQQuadraticBezierCurve2D>& beziercurve, AQUINT count, const Eigen::Vector4f& color)
 	{
 		if (!s_Data2D->LineVertex2D)
 		{
 			AQ_CORE_WARN("Renderer2D::DrawBezier_Line_CPU;Failed to submit data,the data of LineVertex2D is not inicialized!");
 			return;
 		}
-		int curvecount = beziercurve->GetControls().size();
+		int curvecount = (int)beziercurve->GetControls().size();
 
 		//检查Line缓冲区是否已满
-		uint32_t linevertexcount = 0;
+		AQUINT linevertexcount = 0;
 		for (auto& elementcount : s_Data2D->LineVertex2D->LineElementCounts)
 		{
 			linevertexcount += elementcount;
@@ -204,17 +242,17 @@ namespace Aquarius
 			FlushAndReset();
 		//________________________________________________
 
-		uint32_t totalcount = 0;
+		AQUINT totalcount = 0;
 
 		for (int i = 0; i < curvecount; i++)
 		{
-			glm::vec3 start{ beziercurve->GetPoints()[i].x,beziercurve->GetPoints()[i].y,0.0f };
-			glm::vec3 end{ beziercurve->GetPoints()[i + 1].x,beziercurve->GetPoints()[i + 1].y,0.0f };
-			glm::vec3 control{ beziercurve->GetControls()[i].x,beziercurve->GetControls()[i].y,0.0f };
+			Eigen::Vector3f start{ beziercurve->GetPoints()[i].x,beziercurve->GetPoints()[i].y,0.0f };
+			Eigen::Vector3f end{ beziercurve->GetPoints()[i + 1].x,beziercurve->GetPoints()[i + 1].y,0.0f };
+			Eigen::Vector3f control{ beziercurve->GetControls()[i].x,beziercurve->GetControls()[i].y,0.0f };
 			
 			float step = 1.0f / (float)count;
 			float t = 0.0f;
-			for (uint32_t index = 0; index < count; index++)
+			for (AQUINT index = 0; index < count; index++)
 			{
 				s_Data2D->LineVertex2D->LineVertexPointer->Position = CalculateBezierPosition(start, end, control, t);
 				s_Data2D->LineVertex2D->LineVertexPointer->Color = color;
@@ -228,7 +266,7 @@ namespace Aquarius
 		s_Data2D->Statistics.LineVertexCount += totalcount;
 		s_Data2D->LineVertex2D->IsDrawing = true;
 	}
-	void Renderer2D::DrawBezier_Line_GPU(const glm::vec3& startpoint, const glm::vec3& endpoint, const glm::vec3& controlpoint, uint32_t count, const glm::vec4& color, const float width)
+	void Renderer2D::DrawBezier_Line_GPU(const Eigen::Vector3f& startpoint, const Eigen::Vector3f& endpoint, const Eigen::Vector3f& controlpoint, AQUINT count, const Eigen::Vector4f& color, const AQFLOAT width)
 	{
 		if (!s_Data2D->QudraticBezierUnit2D)
 		{
@@ -236,7 +274,7 @@ namespace Aquarius
 			return;
 		}
 		//检查Line缓冲区是否已满
-		uint32_t unitcount = 0;
+		AQUINT unitcount = 0;
 		for (auto& elementcount : s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts)
 		{
 			unitcount += elementcount;
@@ -247,7 +285,7 @@ namespace Aquarius
 		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->start = startpoint;
 		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->end = endpoint;
 		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->control = controlpoint;
-		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->vertexcount = count;
+		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->vertexcount = (float)count;
 		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->Color = color;
 		s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer++;
 
@@ -268,17 +306,17 @@ namespace Aquarius
 		s_Data2D->Statistics.QuadraticBezierUnitCount++;
 		s_Data2D->QudraticBezierUnit2D->IsDrawing = true;
 	}
-	void Renderer2D::DrawBezier_Line_GPU(const AQRef<AQQuadraticBezierCurve2D>& beziercurve, uint32_t count, const glm::vec4& color, const float width)
+	void Renderer2D::DrawBezier_Line_GPU(const AQRef<AQQuadraticBezierCurve2D>& beziercurve, AQUINT count, const Eigen::Vector4f& color, const AQFLOAT width)
 	{
 		if (!s_Data2D->QudraticBezierUnit2D)
 		{
 			AQ_CORE_WARN("Renderer2D::DrawBezier_Line_GPU;Failed to submit data,the data of QudraticBezierUnit2D is not inicialized!");
 			return;
 		}
-		int curvecount = beziercurve->GetControls().size();
+		int curvecount =(int) beziercurve->GetControls().size();
 
 		//检查Line缓冲区是否已满
-		uint32_t unitcount = 0;
+		AQUINT unitcount = 0;
 		for (auto& elementcount : s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts)
 		{
 			unitcount += elementcount;
@@ -288,14 +326,14 @@ namespace Aquarius
 
 		for (int i = 0; i < curvecount; i++)
 		{
-			glm::vec3 start{ beziercurve->GetPoints()[i].x,beziercurve->GetPoints()[i].y,0.0f };
-			glm::vec3 end{ beziercurve->GetPoints()[i + 1].x,beziercurve->GetPoints()[i + 1].y,0.0f };
-			glm::vec3 control{ beziercurve->GetControls()[i].x,beziercurve->GetControls()[i].y,0.0f };
+			Eigen::Vector3f start{ beziercurve->GetPoints()[i].x,beziercurve->GetPoints()[i].y,0.0f };
+			Eigen::Vector3f end{ beziercurve->GetPoints()[i + 1].x,beziercurve->GetPoints()[i + 1].y,0.0f };
+			Eigen::Vector3f control{ beziercurve->GetControls()[i].x,beziercurve->GetControls()[i].y,0.0f };
 
 			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->start = start;
 			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->end = end;
 			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->control = control;
-			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->vertexcount = count;
+			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->vertexcount = (float)count;
 			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer->Color = color;
 			s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer++;
 
@@ -334,53 +372,61 @@ namespace Aquarius
 			ResetSubData(subdata);
 		}
 	}
-	uint32_t Renderer2D::MatchTextureIndex(const AQRef<AQTexture2D>& texture)
+	AQUINT Renderer2D::MatchTextureIndex(const AQRef<AQTexture2D>& texture)
 	{
-		for (uint32_t i = 1; i < s_Data2D->CommonTexture2D->TextureSlotIndex; i++)
+		for (AQUINT i = 1; i < s_Data2D->CommonTexture2D->TextureSlotIndex; i++)
 		{
 			if (s_Data2D->CommonTexture2D->TextureSlots[i] == texture)return i;
 		}
 		return 0;
 	}
 
-	void Renderer2D::SetQuadDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color, float textureindex, float tilingfactor)
+	void Renderer2D::SetQuadDataToVertexBuffer(const Eigen::Matrix4f& transform, const Eigen::Vector4f& color, AQFLOAT textureindex, AQFLOAT tilingfactor)
 	{
 		//检查Quad缓冲区是否已满
 		if (s_Data2D->QuadVertex2D->QuadElementCount >= s_Data2D->QuadVertex2D->MaxQuadIndices - 6)
 			FlushAndReset();
 		//______________________________________________________
 		//矩形左下点
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Position = transform * s_Data2D->QuadVertex2D->QuadPosition[0];
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Color = color;
-		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord = { 0.0f,0.0f };
+		auto pos1 =transform* s_Data2D->QuadVertex2D->QuadPosition[0];
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Position << pos1.x(), pos1.y(), pos1.z(), pos1.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Color <<color.x(), color.y(), color.z(), color.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord << 0.0f, 0.0f;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TexIndex = textureindex;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TilingFactor = tilingfactor;
 		s_Data2D->QuadVertex2D->QuadVertexPointer++;
 		//______________________________________________________
 		//矩形右下点
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Position = transform * s_Data2D->QuadVertex2D->QuadPosition[1];
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Color = color;
-		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord = { 1.0f,0.0f };
+		auto pos2 = transform * s_Data2D->QuadVertex2D->QuadPosition[1];
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Position << pos2.x(), pos2.y(), pos2.z(), pos2.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Color << color.x(), color.y(), color.z(), color.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord << 1.0f, 0.0f;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TexIndex = textureindex;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TilingFactor = tilingfactor;
 		s_Data2D->QuadVertex2D->QuadVertexPointer++;
 		//______________________________________________________
 		//矩形右上点
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Position = transform * s_Data2D->QuadVertex2D->QuadPosition[2];
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Color = color;
-		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord = { 1.0f,1.0f };
+		auto pos3 = transform * s_Data2D->QuadVertex2D->QuadPosition[2];
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Position << pos3.x(), pos3.y(), pos3.z(), pos3.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Color << color.x(), color.y(), color.z(), color.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord << 1.0f, 1.0f;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TexIndex = textureindex;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TilingFactor = tilingfactor;
 		s_Data2D->QuadVertex2D->QuadVertexPointer++;
 		//______________________________________________________
 		//矩形左上点
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Position = transform * s_Data2D->QuadVertex2D->QuadPosition[3];
-		s_Data2D->QuadVertex2D->QuadVertexPointer->Color = color;
-		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord = { 0.0f,1.0f };
+		auto pos4 = transform * s_Data2D->QuadVertex2D->QuadPosition[3];
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Position << pos4.x(), pos4.y(), pos4.z(), pos4.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->Color << color.x(), color.y(), color.z(), color.w();
+		s_Data2D->QuadVertex2D->QuadVertexPointer->TexCoord << 0.0f, 1.0f;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TexIndex = textureindex;
 		s_Data2D->QuadVertex2D->QuadVertexPointer->TilingFactor = tilingfactor;
 		s_Data2D->QuadVertex2D->QuadVertexPointer++;
 		//______________________________________________________
+		((s_Data2D->QuadVertex2D->QuadVertexBase) + 0)->Color;
+		((s_Data2D->QuadVertex2D->QuadVertexBase) + 1)->Color;
+		((s_Data2D->QuadVertex2D->QuadVertexBase) + 2)->Color;
+		((s_Data2D->QuadVertex2D->QuadVertexBase) + 3)->Color;
 		s_Data2D->QuadVertex2D->QuadElementCount += 6;
 		s_Data2D->Statistics.QuadCount++;
 	}
@@ -401,11 +447,11 @@ namespace Aquarius
 			samplers[i] = i;
 		//______________________________________________________________
 		//设置纯白像素块,把它作成一个单独的纹理是一个高效的方案
-		uint32_t WhiteTextureData = 0xffffffff;
+		AQUINT WhiteTextureData = 0xffffffff;
 		s_Data2D->CommonTexture2D->DefaultTexture2D = AQTexture2D::Create("SingleWhitePixel", 1, 1);
-		s_Data2D->CommonTexture2D->DefaultTexture2D->LoadData(&WhiteTextureData, sizeof(uint32_t));
+		s_Data2D->CommonTexture2D->DefaultTexture2D->LoadData(&WhiteTextureData, sizeof(AQUINT));
 
-		const char* whitetextureshader = R"(G:\Mine\CppProjects\Aquarius\AquariusCore\source\Data\Shader\texture2d.sd)";
+		const char* whitetextureshader = R"(.\source\Assets\Internal\Shader\texture2d.glsl)";
 		s_Data2D->CommonTexture2D->DefaultTextureShader2D = AQShader::Create(whitetextureshader);
 		s_Data2D->CommonTexture2D->DefaultTextureShader2D->Bind();
 		s_Data2D->CommonTexture2D->DefaultTextureShader2D->SetValue("u_Texture", samplers, CommonTexture2DData::MaxTextureSlots);
@@ -416,7 +462,7 @@ namespace Aquarius
 			s_Data2D->OnUses.emplace_back(Renderer2D_On_Use::CommonTexture2D);
 	}
 
-	void Renderer2D::Init_QuadVertex2D(uint32_t maxquads)
+	void Renderer2D::Init_QuadVertex2D(AQUINT maxquads)
 	{
 		if (!s_Data2D->QuadVertex2D)
 			s_Data2D->QuadVertex2D = std::make_unique<QuadVertex2DData>(maxquads);
@@ -428,24 +474,24 @@ namespace Aquarius
 				s_Data2D->QuadVertex2D.reset(new QuadVertex2DData(maxquads));
 		}
 
-		s_Data2D->QuadVertex2D->QuadPosition[0] = glm::vec4{ -0.5f,-0.5f,0.0f,1.0f };
-		s_Data2D->QuadVertex2D->QuadPosition[1] = glm::vec4{ 0.5f,-0.5f,0.0f,1.0f };
-		s_Data2D->QuadVertex2D->QuadPosition[2] = glm::vec4{ 0.5f,0.5f,0.0f,1.0f };
-		s_Data2D->QuadVertex2D->QuadPosition[3] = glm::vec4{ -0.5f,0.5f,0.0f,1.0f };
+		s_Data2D->QuadVertex2D->QuadPosition[0] = Eigen::Vector4f{ -0.5f,-0.5f,0.0f,1.0f };
+		s_Data2D->QuadVertex2D->QuadPosition[1] = Eigen::Vector4f{ 0.5f,-0.5f,0.0f,1.0f };
+		s_Data2D->QuadVertex2D->QuadPosition[2] = Eigen::Vector4f{ 0.5f,0.5f,0.0f,1.0f };
+		s_Data2D->QuadVertex2D->QuadPosition[3] = Eigen::Vector4f{ -0.5f,0.5f,0.0f,1.0f };
 
 		s_Data2D->QuadVertex2D->QuadVAO2D = AQVertexArray::Create("quad2d");
 		s_Data2D->QuadVertex2D->QuadVertexBase = new QuadVertex2DBuffer[s_Data2D->QuadVertex2D->MaxQuadVertices];
 		s_Data2D->QuadVertex2D->QuadVBO2D = AQVertexBuffer::Create(s_Data2D->QuadVertex2D->MaxQuadVertices * sizeof(QuadVertex2DBuffer), "s_Data2D->QuadVBO2D");
 		s_Data2D->QuadVertex2D->QuadVBO2D->SetLayout({
-			{ "vertex",0,BufferDataType::Float3 },
+			{ "vertex",0,BufferDataType::Float4 },
 			{ "color",1,BufferDataType::Float4 },
 			{ "texcoord",2,BufferDataType::Float2 },
 			{ "texindex",3,BufferDataType::Float1 } ,
 			{ "tilingfactor",4,BufferDataType::Float1 } });
 
-		uint32_t* quad2dindices = new uint32_t[s_Data2D->QuadVertex2D->MaxQuadIndices];
-		uint32_t offset = 0;
-		for (uint32_t i = 0; i < s_Data2D->QuadVertex2D->MaxQuadIndices; i += 6)
+		AQUINT* quad2dindices = new AQUINT[s_Data2D->QuadVertex2D->MaxQuadIndices];
+		AQUINT offset = 0;
+		for (AQUINT i = 0; i < s_Data2D->QuadVertex2D->MaxQuadIndices; i += 6)
 		{
 			quad2dindices[i + 0] = offset + 0;
 			quad2dindices[i + 1] = offset + 1;
@@ -466,7 +512,7 @@ namespace Aquarius
 			s_Data2D->OnUses.emplace_back(Renderer2D_On_Use::QuadVertex2D);
 	 }
 
-	void Renderer2D::Init_LineVertex2D(uint32_t maxlinevertices)
+	void Renderer2D::Init_LineVertex2D(AQUINT maxlinevertices)
 	{
 		if (!s_Data2D->LineVertex2D)
 			s_Data2D->LineVertex2D = std::make_unique<LineVertex2DData>(maxlinevertices);
@@ -485,8 +531,8 @@ namespace Aquarius
 			{ "vertex", 0, BufferDataType::Float3 } ,
 			{ "color",   1,  BufferDataType::Float4 } });
 
-		uint32_t* lineindices = new uint32_t[s_Data2D->LineVertex2D->MaxLineIndices];
-		for (uint32_t i = 0; i < s_Data2D->LineVertex2D->MaxLineIndices; i++)
+		AQUINT* lineindices = new AQUINT[s_Data2D->LineVertex2D->MaxLineIndices];
+		for (AQUINT i = 0; i < s_Data2D->LineVertex2D->MaxLineIndices; i++)
 		{
 			lineindices[i] = i;
 		}
@@ -505,7 +551,7 @@ namespace Aquarius
 
 	}
 
-	void Renderer2D::Init_QudraticBezierUnit2D(uint32_t maxquadraticbezierunits)
+	void Renderer2D::Init_QudraticBezierUnit2D(AQUINT maxquadraticbezierunits)
 	{
 		if (!s_Data2D->QudraticBezierUnit2D)
 			s_Data2D->QudraticBezierUnit2D = std::make_unique<QudraticBezierUnit2DData>(maxquadraticbezierunits);
@@ -527,8 +573,8 @@ namespace Aquarius
 			{ "vertexcount", 3, BufferDataType::Float1 } ,
 			{ "color",   4,  BufferDataType::Float4 } });
 
-		uint32_t* quadraticbezierindices = new uint32_t[s_Data2D->QudraticBezierUnit2D->MaxQuadraticBezierUnitIndices];
-		for (uint32_t i = 0; i < s_Data2D->QudraticBezierUnit2D->MaxQuadraticBezierUnitIndices; i++)
+		AQUINT* quadraticbezierindices = new AQUINT[s_Data2D->QudraticBezierUnit2D->MaxQuadraticBezierUnitIndices];
+		for (AQUINT i = 0; i < s_Data2D->QudraticBezierUnit2D->MaxQuadraticBezierUnitIndices; i++)
 		{
 			quadraticbezierindices[i] = i;
 		}
@@ -567,14 +613,14 @@ namespace Aquarius
 			}
 			case(Renderer2D_On_Use::LineVertex2D):
 			{
-				std::vector<uint32_t>().swap(s_Data2D->LineVertex2D->LineElementCounts);
+				std::vector<AQUINT>().swap(s_Data2D->LineVertex2D->LineElementCounts);
 				s_Data2D->LineVertex2D->LineVertexPointer = s_Data2D->LineVertex2D->LineVertexBase;
 				return;
 			}
 			case(Renderer2D_On_Use::QudraticBezierUnit2D):
 			{
 				std::vector<float>().swap(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitLineWidth);
-				std::vector<uint32_t>().swap(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts);
+				std::vector<AQUINT>().swap(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts);
 				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer = s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitBase;
 				return;
 			}
@@ -590,19 +636,19 @@ namespace Aquarius
 			case(Renderer2D_On_Use::CommonTexture2D):return;
 			case(Renderer2D_On_Use::QuadVertex2D):
 			{
-				uint32_t quadsize = (uint8_t*)s_Data2D->QuadVertex2D->QuadVertexPointer - (uint8_t*)s_Data2D->QuadVertex2D->QuadVertexBase;
+				AQUINT quadsize = (uint8_t*)s_Data2D->QuadVertex2D->QuadVertexPointer - (uint8_t*)s_Data2D->QuadVertex2D->QuadVertexBase;
 				s_Data2D->QuadVertex2D->QuadVBO2D->SetData(s_Data2D->QuadVertex2D->QuadVertexBase, quadsize);
 				return;
 			}
 			case(Renderer2D_On_Use::LineVertex2D):
 			{
-				uint32_t linesize = (uint8_t*)s_Data2D->LineVertex2D->LineVertexPointer - (uint8_t*)s_Data2D->LineVertex2D->LineVertexBase;
+				AQUINT linesize =(uint8_t*)s_Data2D->LineVertex2D->LineVertexPointer - (uint8_t*)s_Data2D->LineVertex2D->LineVertexBase;
 				s_Data2D->LineVertex2D->LineVBO2D->SetData(s_Data2D->LineVertex2D->LineVertexBase, linesize);
 				return;
 			}
 			case(Renderer2D_On_Use::QudraticBezierUnit2D):
 			{
-				uint32_t quadraticbeziersize = (uint8_t*)s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer - (uint8_t*)s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitBase;
+				AQUINT quadraticbeziersize = (uint8_t*)s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitPointer - (uint8_t*)s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitBase;
 				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitVBO2D->SetData(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitBase, quadraticbeziersize);
 				return;
 			}
@@ -626,33 +672,33 @@ namespace Aquarius
 			{
 				s_Data2D->LineVertex2D->LineShader2D->Bind();
 				RenderCommand::DrawLineElement(s_Data2D->LineVertex2D->LineVAO2D, s_Data2D->LineVertex2D->LineElementCounts);
-				s_Data2D->Statistics.DrawCalls += s_Data2D->LineVertex2D->LineElementCounts.size();
+				s_Data2D->Statistics.DrawCalls += (AQUINT)s_Data2D->LineVertex2D->LineElementCounts.size();
 				s_Data2D->LineVertex2D->IsDrawing = false;
 				return;
 			}
 			case(Renderer2D_On_Use::QudraticBezierUnit2D):
 			{
 				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitShader2D->Bind();
-				for (uint32_t i = 0; i < s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts.size(); i++)
+				for (AQUINT i = 0; i < s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts.size(); i++)
 				{
 					RenderCommand::SetLineWidth(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitLineWidth[i]);
 					RenderCommand::DrawPointElement(s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitVAO2D, s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts[i]);
 				}
-				s_Data2D->Statistics.DrawCalls += s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts.size();
+				s_Data2D->Statistics.DrawCalls += (AQUINT)s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitElementCounts.size();
 				s_Data2D->QudraticBezierUnit2D->IsDrawing = false;
 				return;
 			}
 		}
 		return;
 	}
-	void Renderer2D::PassCameraVPIntoShader(OrthgraphicCamera& camera, Renderer2D_On_Use subdata)
+	void Renderer2D::PassCameraVPIntoShader(const Eigen::Matrix4f& camera_vp, Renderer2D_On_Use subdata)
 	{
 		switch (subdata)
 		{
 			case(Renderer2D_On_Use::CommonTexture2D):
 			{
-				s_Data2D->CommonTexture2D->DefaultTexture2D->Bind();
-				s_Data2D->CommonTexture2D->DefaultTextureShader2D->SetValue("u_VP", camera.GetViewProjection());
+				s_Data2D->CommonTexture2D->DefaultTextureShader2D->Bind();
+				s_Data2D->CommonTexture2D->DefaultTextureShader2D->SetValue("u_VP", camera_vp);
 				return;
 			}
 			case(Renderer2D_On_Use::QuadVertex2D):
@@ -662,13 +708,13 @@ namespace Aquarius
 			case(Renderer2D_On_Use::LineVertex2D):
 			{
 				s_Data2D->LineVertex2D->LineShader2D->Bind();
-				s_Data2D->LineVertex2D->LineShader2D->SetValue("u_VP", camera.GetViewProjection());
+				s_Data2D->LineVertex2D->LineShader2D->SetValue("u_VP", camera_vp);
 				return;
 			}
 			case(Renderer2D_On_Use::QudraticBezierUnit2D):
 			{
 				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitShader2D->Bind();
-				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitShader2D->SetValue("u_VP", camera.GetViewProjection());
+				s_Data2D->QudraticBezierUnit2D->QuadraticBezierUnitShader2D->SetValue("u_VP", camera_vp);
 				return;
 			}
 

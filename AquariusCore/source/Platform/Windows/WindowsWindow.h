@@ -14,7 +14,6 @@ namespace Aquarius
 
 
 		virtual void OnUpdade() override;
-
 		inline unsigned int GetWidth() const override { return m_Data.Width; }
 		inline unsigned int GetHeight() const override { return m_Data.Height; }
 
@@ -24,6 +23,7 @@ namespace Aquarius
 		{
 			m_Data.EventCallBack = callback;
 		}
+
 
 		virtual void SetSync(bool enabled) override;
 		virtual bool IsVSync() const override;

@@ -54,42 +54,42 @@ namespace Aquarius
 		GLCALL(glDeleteProgram(m_ShaderProgram));
 	}
 
-	void AQGLShader::SetValue(const std::string& name, int value) const
+	void AQGLShader::SetValue(const std::string& name, AQINT value) const
 	{
 		SetUniformVar(name, value);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, int* values, uint32_t count) const
+	void AQGLShader::SetValue(const std::string& name, AQINT* values, AQUINT count) const
 	{
 		SetUniformVar(name, values, count);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, float value) const
+	void AQGLShader::SetValue(const std::string& name, AQFLOAT value) const
 	{
 		SetUniformVar(name, value);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, float x, float y, float z) const
+	void AQGLShader::SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z) const
 	{
 		SetUniformVar(name, x, y,z);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, float x, float y, float z, float w) const
+	void AQGLShader::SetValue(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z, AQFLOAT w) const
 	{
 		SetUniformVar(name, x, y, z, w);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, const glm::vec3& value) const
+	void AQGLShader::SetValue(const std::string& name, const Eigen::Vector3f& value) const
 	{
 		SetUniformVar(name, value);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, const glm::vec4& value) const
+	void AQGLShader::SetValue(const std::string& name, const Eigen::Vector4f& value) const
 	{
 		SetUniformVar(name, value);
 	}
 
-	void AQGLShader::SetValue(const std::string& name, const glm::mat4& value) const
+	void AQGLShader::SetValue(const std::string& name, const Eigen::Matrix4f& value) const
 	{
 		SetUniformVar(name, value);
 	}
@@ -219,46 +219,46 @@ namespace Aquarius
 		GLCALL(glUseProgram(0));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, int value) const
+	void AQGLShader::SetUniformVar(const std::string& name, AQINT value) const
 	{
 		GLCALL(glUniform1i(glGetUniformLocation(m_ShaderProgram, name.c_str()), value));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, int* values, uint32_t count) const
+	void AQGLShader::SetUniformVar(const std::string& name, AQINT* values, AQUINT count) const
 	{
 		GLCALL(glUniform1iv(glGetUniformLocation(m_ShaderProgram, name.c_str()), count,values));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, float value) const
+	void AQGLShader::SetUniformVar(const std::string& name, AQFLOAT value) const
 	{
 		GLCALL(glUniform1f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, float x, float y, float z) const
+	void AQGLShader::SetUniformVar(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z) const
 	{
 		GLCALL(glUniform3f(glGetUniformLocation(m_ShaderProgram, name.c_str()), x, y, z));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, float x, float y, float z, float w) const
+	void AQGLShader::SetUniformVar(const std::string& name, AQFLOAT x, AQFLOAT y, AQFLOAT z, AQFLOAT w) const
 	{
 		GLCALL(glUniform4f(glGetUniformLocation(m_ShaderProgram, name.c_str()), x, y, z, w));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec3& value)const
+	void AQGLShader::SetUniformVar(const std::string& name, const Eigen::Vector3f& value)const
 	{
-		GLCALL(glUniform3f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value.x, value.y, value.z));
+		GLCALL(glUniform3f(glGetUniformLocation(m_ShaderProgram, name.c_str()), value.x(), value.y(), value.z()));
 	}
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::vec4& value)const
+	void AQGLShader::SetUniformVar(const std::string& name, const Eigen::Vector4f& value)const
 	{
-		GLCALL(glUniform4f(glGetUniformLocation(m_ShaderProgram, name.c_str()),value.x, value.y, value.z, value.w));
+		GLCALL(glUniform4f(glGetUniformLocation(m_ShaderProgram, name.c_str()),value.x(), value.y(), value.z(), value.w()));
 	}
 
 
 
-	void AQGLShader::SetUniformVar(const std::string& name, const glm::mat4& value)const
+	void AQGLShader::SetUniformVar(const std::string& name, const Eigen::Matrix4f& value)const
 	{
-		GLCALL(glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()), 1, GL_FALSE, glm::value_ptr(value)));
+		GLCALL(glUniformMatrix4fv(glGetUniformLocation(m_ShaderProgram, name.c_str()), 1, GL_FALSE,  value.data()));
 	}
 
 

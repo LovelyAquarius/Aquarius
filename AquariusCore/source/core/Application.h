@@ -12,7 +12,7 @@ namespace Aquarius
 	class  AQUARIUS_API Application
 	{
 	public:
-		Application();
+		Application(std::string name ="Aquarius");
 		virtual ~Application();
 
 		void Run();
@@ -26,6 +26,8 @@ namespace Aquarius
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
+		APPGUI* GetGUILayer(){ return m_GUI; }
+		AQFLOAT& GetLastframeTime() {return m_LastFrameTime;}
 
 		static std::vector<ProfileMessage> s_profile;
 	private:
@@ -34,7 +36,7 @@ namespace Aquarius
 
 		//app核心组件
 		static Application* s_Instance;
-		std::unique_ptr<Window> m_Window{ Window::Create() };
+		std::unique_ptr<Window> m_Window;
 		APPGUI* m_GUI;
 		bool Running = true;
 		bool Minlized = false;

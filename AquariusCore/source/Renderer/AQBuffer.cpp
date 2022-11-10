@@ -7,7 +7,7 @@
 
 namespace Aquarius
 {
-	AQRef<AQVertexBuffer> AQVertexBuffer::Create(uint32_t datasize, const std::string name)
+	AQRef<AQVertexBuffer> AQVertexBuffer::Create(AQUINT datasize, const std::string name)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -19,7 +19,7 @@ namespace Aquarius
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
 		return AQRef<AQVertexBuffer>();
 	}
-	AQRef<AQVertexBuffer> AQVertexBuffer::Create(int datasize, const void* data, int datahandledtype, const std::string name)
+	AQRef<AQVertexBuffer> AQVertexBuffer::Create(AQUINT datasize, const void* data, AQINT datahandledtype, const std::string name)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -31,7 +31,7 @@ namespace Aquarius
 		AQ_CORE_ASSERT(false, "RenderAPI::Unknown GraphicAPI!");
 		return AQRef<AQVertexBuffer>();
 	}
-	AQRef<AQVertexBuffer> AQVertexBuffer::Create(const AQBufferLayout& layout, int datasize, const void* data, int datahandledtype, const std::string name)
+	AQRef<AQVertexBuffer> AQVertexBuffer::Create(const AQBufferLayout& layout, AQUINT datasize, const void* data, AQINT datahandledtype, const std::string name)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{
@@ -44,7 +44,7 @@ namespace Aquarius
 		return AQRef<AQVertexBuffer>();
 	}
 
-	AQRef<AQElementBuffer> AQElementBuffer::Create(uint32_t elementcount, const void* data, int datahandledtype, const std::string name)
+	AQRef<AQElementBuffer> AQElementBuffer::Create(AQUINT elementcount, const void* data, AQINT datahandledtype, const std::string name)
 	{
 		switch (Renderer::GetGraphicAPI())
 		{

@@ -2,13 +2,10 @@
 #include "core/AquariusCore.h"
 #include "core/AQObject.h"
 #include "core/TimeSystem.h"
-
+#include "MathSystem/AQEigen.h"
 #include "Renderer/OrthgraphicCamera.h"
 
 
-#include <GLM/glm.hpp>
-#include <GLM/gtc/matrix_transform.hpp>
-#include <GLM/gtc/type_ptr.hpp>
 namespace Aquarius
 {
 
@@ -17,19 +14,19 @@ namespace Aquarius
 	public:
 		struct ParticleProperties
 		{
-			glm::vec2 Position;
-			glm::vec2 Velosity;
-			glm::vec2 VelosityVariation;
-			glm::vec4 BeginColor;
-			glm::vec4 EndColor;
+			Eigen::Vector2f Position;
+			Eigen::Vector2f Velosity;
+			Eigen::Vector2f VelosityVariation;
+			Eigen::Vector4f BeginColor;
+			Eigen::Vector4f EndColor;
 
-			float BeginSize;
-			float EndSize;
-			float SizeVariation;
-			float Lifetime = 1.0f;
+			AQFLOAT BeginSize;
+			AQFLOAT EndSize;
+			AQFLOAT SizeVariation;
+			AQFLOAT Lifetime = 1.0f;
 		};
 	public:
-		AQParticcle2D(const uint32_t maxparticles);
+		AQParticcle2D(const AQUINT maxparticles);
 
 		void OnUpdate(DeltaTime& dt);
 		void OnRender(OrthgraphicCamera& camera);
@@ -38,28 +35,28 @@ namespace Aquarius
 
 
 
-		uint32_t GetParticleIndex() { return m_ParticleIndex; }
-		uint32_t GetAliveParticleCount() { return m_AliveParticleCount; }
+		AQUINT GetParticleIndex() { return m_ParticleIndex; }
+		AQUINT GetAliveParticleCount() { return m_AliveParticleCount; }
 	private:
 		struct Particle
 		{
-			glm::vec2 Position;
-			glm::vec2 Velosity;
-			glm::vec4 BeginColor;
-			glm::vec4 EndColor;
+			Eigen::Vector2f Position;
+			Eigen::Vector2f Velosity;
+			Eigen::Vector4f BeginColor;
+			Eigen::Vector4f EndColor;
 
-			float Roatation = 0.0f;
-			float BeginSize;
-			float EndSize;
-			float Lifetime = 1.0f;
-			float LifeRemaining = 0.0f;
+			AQFLOAT Roatation = 0.0f;
+			AQFLOAT BeginSize;
+			AQFLOAT EndSize;
+			AQFLOAT Lifetime = 1.0f;
+			AQFLOAT LifeRemaining = 0.0f;
 
 			bool Active = false;
 		};
 
 	private:
 		std::vector<Particle> m_Particles;
-		uint32_t m_ParticleIndex ;
+		AQUINT m_ParticleIndex ;
 		int m_AliveParticleCount = 0;
 	};
 

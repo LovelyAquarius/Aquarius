@@ -17,6 +17,7 @@
 #include "Renderer/AQBufferLayout.h"
 #include "Platform/AQOpenGL/AQGLShader.h"
 #include "Renderer/AQBuffer.h"
+#include "Renderer/AQFrameBuffer.h"
 #include "Renderer/Renderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Platform/AQOpenGL/AQGLTexture.h"

@@ -1,29 +1,33 @@
 #include "AQPCH.h"
 #include "OrthgraphicCamera.h"
+#include "core/AQCommon.h"
 #include <GLM/gtc/matrix_transform.hpp>
 
 namespace Aquarius
 {
 
 	OrthgraphicCamera::OrthgraphicCamera(float left, float right, float bottom, float top)
-		:m_Projection(glm::ortho(left,right,bottom,top,-0.1f,1.0f)),m_View(1.0f)
+		:m_Projection(),m_View()
 	{
-		m_VP = m_Projection * m_View;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, m_View);
+		SetProjection(left, right, bottom, top);
 	}
 
 
 	void OrthgraphicCamera::SetProjection(float left, float right, float bottom, float top)
 	{
-		m_Projection = glm::ortho(left, right, bottom, top, -0.1f, 1.0f);
-		m_VP = m_Projection * m_View;
+		m_Projection = AQ_Ortho(left, right, bottom, top, -0.1f, 1.0f);
+		m_VP = m_Projection * m_View; 
 	}
 
 	void OrthgraphicCamera::CalculateView()
 	{
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_Position)*
-			glm::rotate(glm::mat4 (1.0f),glm::radians(m_Rotation),glm::vec3(0.0f,0.0f,1.0f));
-		
-		m_View = glm::inverse(transform);
+		Eigen::Transform<AQFLOAT, 3, Eigen::Affine> transform;
+		AQ_CORE_EIGEN_IDENTITY_MATRIX4F(1.0f, transform.matrix());
+		transform.rotate(Eigen::AngleAxis<AQFLOAT>(AQ_DegreeToRadian(m_Rotation), Eigen::Vector3f(0.0f, 0.0f, 1.0f)));
+		transform.translate(m_Position);
+
+		m_View = transform.inverse().matrix();
 		m_VP = m_Projection * m_View;
 	}
 

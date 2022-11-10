@@ -11,7 +11,7 @@
 namespace Aquarius
 
 {
-	AQRef<AQTexture2D> AQGLTexture2D::Create(std::string name, const char* filepath)
+	AQRef<AQTexture2D> AQGLTexture2D::Create(const std::string& name, const char* filepath)
 	{
 		return new AQGLTexture2D(filepath, name);
 	}
@@ -21,7 +21,7 @@ namespace Aquarius
 		return new AQGLTexture2D(filepath);
 	}
 
-	AQRef<AQTexture2D> AQGLTexture2D::Create(std::string name, uint32_t width, uint32_t height)
+	AQRef<AQTexture2D> AQGLTexture2D::Create(const std::string& name, AQUINT width, AQUINT height)
 	{
 		return new AQGLTexture2D(name, width, height);
 	}
@@ -49,7 +49,7 @@ namespace Aquarius
 		m_Name = AQ_ExtractFilename(filepath);
 	}
 
-	AQGLTexture2D::AQGLTexture2D(const std::string& name, uint32_t width, uint32_t height)
+	AQGLTexture2D::AQGLTexture2D(const std::string& name, AQUINT width, AQUINT height)
 		:m_Width(width), m_Height(height)
 	{
 		if (name.size())
@@ -140,7 +140,7 @@ namespace Aquarius
 		//___________________________
 	}
 
-	void AQGLTexture2D::LoadData(void* data, uint32_t datasize)
+	void AQGLTexture2D::LoadData(void* data, AQUINT datasize)
 	{
 		uint32_t bytesperchannel = m_Dataformat == GL_RGBA ? 4 : 3;
 		if (datasize == m_Width * m_Height * bytesperchannel)
@@ -167,37 +167,37 @@ namespace Aquarius
 
 namespace Aquarius
 {
-	AQRef<AQSubTexture2D> AQGLSubTexture2D::Create(const std::string& name, const AQRef<AQGLTexture2D>& texture, const glm::vec2& subsize, const glm::vec2& subcoordindex)
+	AQRef<AQSubTexture2D> AQGLSubTexture2D::Create(const std::string& name, const AQRef<AQGLTexture2D>& texture, const Eigen::Vector2f& subsize, const Eigen::Vector2f& subcoordindex)
 	{
-		glm::vec2 minimumbound = { (subcoordindex.x) * subsize.x / texture->GetWidth(),(subcoordindex.y) * subsize.y / texture->GetHeight() };
-		glm::vec2 maximumbound = { (subcoordindex.x+1) * subsize.x / texture->GetWidth(),(subcoordindex.y+1) * subsize.y / texture->GetHeight() };
+		Eigen::Vector2f minimumbound = { (subcoordindex.x()) * subsize.x() / texture->GetWidth(),(subcoordindex.y()) * subsize.y() / texture->GetHeight()};
+		Eigen::Vector2f maximumbound = { (subcoordindex.x() +1) * subsize.x() / texture->GetWidth(),(subcoordindex.y() +1) * subsize.y() / texture->GetHeight() };
 		return new AQGLSubTexture2D(name, texture, minimumbound, maximumbound);
 	}
-	AQRef<AQSubTexture2D> AQGLSubTexture2D::Create(const AQRef<AQGLTexture2D>& texture, const glm::vec2& subsize, const glm::vec2& subcoordindex)
+	AQRef<AQSubTexture2D> AQGLSubTexture2D::Create(const AQRef<AQGLTexture2D>& texture, const Eigen::Vector2f& subsize, const Eigen::Vector2f& subcoordindex)
 	{
-		glm::vec2 minimumbound = { (subcoordindex.x) * subsize.x / texture->GetWidth(),(subcoordindex.y) * subsize.y / texture->GetHeight() };
-		glm::vec2 maximumbound = { (subcoordindex.x + 1) * subsize.x / texture->GetWidth(),(subcoordindex.y + 1) * subsize.y / texture->GetHeight() };
+		Eigen::Vector2f minimumbound = { (subcoordindex.x()) * subsize.x() / texture->GetWidth(),(subcoordindex.y()) * subsize.y() / texture->GetHeight() };
+		Eigen::Vector2f maximumbound = { (subcoordindex.x() + 1) * subsize.x() / texture->GetWidth(),(subcoordindex.y() + 1) * subsize.y() / texture->GetHeight() };
 		return new AQGLSubTexture2D(texture, minimumbound, maximumbound);
 	}
 	AQRef<AQObject> AQGLSubTexture2D::Copy()
 	{
-		glm::vec2 minimumbound = m_TexCoords[0];
-		glm::vec2 maximumbound = m_TexCoords[2];
+		Eigen::Vector2f minimumbound = m_TexCoords[0];
+		Eigen::Vector2f maximumbound = m_TexCoords[2];
 		return new AQGLSubTexture2D(m_Name,m_ParentTexture, minimumbound, maximumbound);
 	}
-	AQGLSubTexture2D::AQGLSubTexture2D(const AQRef<AQGLTexture2D>& texture, const glm::vec2& minimumbound, const glm::vec2& maximumbound)
+	AQGLSubTexture2D::AQGLSubTexture2D(const AQRef<AQGLTexture2D>& texture, const Eigen::Vector2f& minimumbound, const Eigen::Vector2f& maximumbound)
 		:m_ParentTexture(texture)
 	{
 		m_Name = "Unnamed AQGLSubTexture2D";
 		m_type = AQObjectType::AQGLSubTexture2D;
 
-		m_TexCoords[0] = { minimumbound.x,minimumbound.y };
-		m_TexCoords[1] = { maximumbound.x,minimumbound.y };
-		m_TexCoords[2] = { maximumbound.x,maximumbound.y };
-		m_TexCoords[3] = { minimumbound.x,maximumbound.y };
+		m_TexCoords[0] = { minimumbound.x(),minimumbound.y() };
+		m_TexCoords[1] = { maximumbound.x(),minimumbound.y() };
+		m_TexCoords[2] = { maximumbound.x(),maximumbound.y() };
+		m_TexCoords[3] = { minimumbound.x(),maximumbound.y() };
 	}
 
-	AQGLSubTexture2D::AQGLSubTexture2D(const std::string& name, const AQRef<AQGLTexture2D>& texture, const glm::vec2& minimumbound, const glm::vec2& maximumbound)
+	AQGLSubTexture2D::AQGLSubTexture2D(const std::string& name, const AQRef<AQGLTexture2D>& texture, const Eigen::Vector2f& minimumbound, const Eigen::Vector2f& maximumbound)
 		:m_ParentTexture (texture)
 	{
 		if (name.size())
@@ -206,10 +206,10 @@ namespace Aquarius
 			m_Name = "Unnamed AQGLSubTexture2D";
 		m_type = AQObjectType::AQGLSubTexture2D;
 
-		m_TexCoords[0] = { minimumbound.x,minimumbound.y };
-		m_TexCoords[1]  = { maximumbound.x,minimumbound.y };
-		m_TexCoords[2] = { maximumbound.x,maximumbound.y };
-		m_TexCoords[3] = { minimumbound.x,maximumbound.y };
+		m_TexCoords[0] = { minimumbound.x(),minimumbound.y() };
+		m_TexCoords[1]  = { maximumbound.x(),minimumbound.y() };
+		m_TexCoords[2] = { maximumbound.x(),maximumbound.y() };
+		m_TexCoords[3] = { minimumbound.x(),maximumbound.y() };
 	}
 
 	AQGLSubTexture2D::AQGLSubTexture2D(const AQGLSubTexture2D& other)

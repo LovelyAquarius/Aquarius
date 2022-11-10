@@ -9,7 +9,7 @@ namespace Aquarius {
 	enum class AQUARIUS_API EventType
 	{
 		None = 0,
-		WindowClose, WindowResize, WindowFocus, WinndowLostFocus, Windowmoved,
+		WindowClose, WindowResize, WindowFocus, WinndowLostFocus, Windowmoved, 
 		AppTick, AppUpdate, AppRender,
 		KeyPressed, KeyReleased, KeyTyped,
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled

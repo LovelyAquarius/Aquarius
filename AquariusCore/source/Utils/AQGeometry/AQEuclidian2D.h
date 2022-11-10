@@ -16,11 +16,12 @@
 namespace Aquarius
 {
 	//这个类的曲线每一条子曲线都是贝塞尔曲线，且全部相连
+	//未完成，需要大量改动
 	class AQQuadraticBezierCurve2D:public AQObject
 	{
 	public:
 		static AQRef<AQQuadraticBezierCurve2D> Create();
-		static AQRef<AQQuadraticBezierCurve2D> Create(const std::string& name);
+		static AQRef<AQQuadraticBezierCurve2D> Create(const std::string name);
 		static AQObjectType ClassType() { return AQObjectType::AQQuadraticBezierCurve2D; }
 	public:
 		std::vector<AQ2DCoord>& GetPoints() { return points; }
