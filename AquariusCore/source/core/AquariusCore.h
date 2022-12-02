@@ -71,6 +71,7 @@ m_type = other.m_type
 #define AQUINT uint32_t
 #define AQUINT64 uint64_t
 #define AQFLOAT float
+#define AQDOUBLE double
 #define AQBOOL bool
 //________________________________________________
 

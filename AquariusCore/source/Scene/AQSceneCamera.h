@@ -20,12 +20,12 @@ namespace Aquarius
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; }
 		ProjectionType GetProjectionType() const { return m_ProjectionType; }
 
-		void SetOrthoGraphicSize(AQFLOAT size){m_OrthoGraphicSize = size;RecaculateProjection();}
-		AQFLOAT GetOrthoGraphicSize()const { return m_OrthoGraphicSize; }
-		void SetOrthoGraphicNear(AQFLOAT nearclip) { m_OrthoGraphicNear = nearclip; RecaculateProjection(); }
-		AQFLOAT GetOrthoGraphicNear()const { return m_OrthoGraphicNear;}
-		void SetOrthoGraphicFar(AQFLOAT farclip) {m_OrthoGraphicFar = farclip; RecaculateProjection();}
-		AQFLOAT GetOrthoGraphicFar()const { return m_OrthoGraphicFar; }
+		void SetOrthographicSize(AQFLOAT size){m_OrthoGraphicSize = size;RecaculateProjection();}
+		AQFLOAT GetOrthographicSize()const { return m_OrthoGraphicSize; }
+		void SetOrthographicNear(AQFLOAT nearclip) { m_OrthoGraphicNear = nearclip; RecaculateProjection(); }
+		AQFLOAT GetOrthographicNear()const { return m_OrthoGraphicNear;}
+		void SetOrthographicFar(AQFLOAT farclip) {m_OrthoGraphicFar = farclip; RecaculateProjection();}
+		AQFLOAT GetOrthographicFar()const { return m_OrthoGraphicFar; }
 
 		void SetPerspectiveFov(AQFLOAT verticalfov) { m_PerspectiveFov = verticalfov; RecaculateProjection();}
 		AQFLOAT GetPerspectiveFov()const { return m_PerspectiveFov; }
@@ -33,6 +33,8 @@ namespace Aquarius
 		AQFLOAT GetPerspectiveNear()const { return m_PerspectiveNear; }
 		void SetPerspectiveFar(AQFLOAT farclip) { m_PerspectiveFar = farclip; RecaculateProjection(); }
 		AQFLOAT GetPerspectiveFar()const { return m_PerspectiveFar; }
+		void SetAspectRatio(AQFLOAT aspectratio) {m_AspectRatio= aspectratio; RecaculateProjection();}
+		AQFLOAT GetAspectRatio() const { return m_AspectRatio; }
 
 	private:
 		void RecaculateProjection();

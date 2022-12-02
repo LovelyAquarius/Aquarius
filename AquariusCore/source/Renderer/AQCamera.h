@@ -1,6 +1,6 @@
 #pragma once
 #include "core/AquariusCore.h"
-#include "MathSystem/AQEigen.h"
+#include "MathSystem/AQMathEx.h"
 
 namespace Aquarius
 {

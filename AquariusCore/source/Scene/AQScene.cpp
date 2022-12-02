@@ -1,18 +1,15 @@
 #include "AQPCH.h"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer2D/Renderer2D.h"
 #include "AQScene.h"
 #include "AQEntity.h"
 
-#include "ElementSystem/AQComponents/AQTransformComponent.h"
-#include "ElementSystem/AQComponents/AQTagComponent.h"
-#include "ElementSystem/AQComponents/AQColorComponent.h"
-#include "ElementSystem/AQComponents/AQCameraComponent.h"
-#include "ElementSystem/AQComponents/AQNativeScriptComponent.h"
+#include "ElementSystem/AQComponents/AQComponentHeader.h"
+
 
 namespace Aquarius
 {
 
-
+	
 
 	AQRef<AQScene> AQScene::Create()
 	{
@@ -22,6 +19,22 @@ namespace Aquarius
 	AQRef<AQScene> AQScene::Create(const std::string name)
 	{
 		return new AQScene(name);
+	}
+
+	void AQScene::OnRenderEditor(DeltaTime& dt, EditorCamera& camera)
+	{
+		if (camera.GetViewportSize() != Renderer2D::GetRenderViewPort())
+			RenderCommand::SetViewport(0,0,camera.GetViewportSize().x(), camera.GetViewportSize().y());
+
+		Renderer2D::BeginScene(camera);
+		auto group = m_Registry.group<AQRef<AQTransformComponent>>(entt::get<AQRef<AQSpiriteComponent>>);
+		for (auto entity : group)
+		{
+			const auto& [transform, spirite] = group.get< AQRef<AQTransformComponent>, AQRef<AQSpiriteComponent> >(entity);
+			Renderer2D::DrawSpirite(transform->GetTransform(), spirite, (AQUINT)entity);
+		}
+		Renderer2D::EndScene();
+
 	}
 
 	void AQScene::OnUpdate(DeltaTime& dt)
@@ -51,17 +64,17 @@ namespace Aquarius
 	{
 
 		AQCamera* primarycamera = nullptr;
-		Eigen::Matrix4f* cameratransform = nullptr;
+		Eigen::Matrix4f cameratransform;
 		//寻找场景主相机
 		{
 			auto view = m_Registry.view<AQRef<AQTransformComponent>, AQRef<AQCameraComponent>>();
-			for (auto entity : view)
+			for (auto& entity : view)
 			{
 				const auto& [transform, camera] = view.get<AQRef<AQTransformComponent>, AQRef<AQCameraComponent>>(entity);
 				if (camera->IsPrimary)
 				{
 					primarycamera = &camera->Camera;
-					cameratransform = &transform->Transform;
+					cameratransform = transform->GetTransform();
 					break;
 				}
 			}
@@ -70,19 +83,21 @@ namespace Aquarius
 		//渲染
 		if (primarycamera)
 		{
-			Renderer2D::BeginScene(*primarycamera, *cameratransform);
-			
-			auto group = m_Registry.group<AQRef<AQTransformComponent>>(entt::get<AQRef<AQColorComponent>>);
+			Renderer2D::BeginScene(*primarycamera, cameratransform);
+
+			auto group = m_Registry.group<AQRef<AQTransformComponent>>(entt::get<AQRef<AQSpiriteComponent>>);
 			for (auto entity : group)
 			{
-				const auto& [transform, color] = group.get< AQRef<AQTransformComponent>, AQRef<AQColorComponent> >(entity);
-				Renderer2D::DrawQuad(transform->Transform, color->Color);
+				const auto& [transform, color] = group.get< AQRef<AQTransformComponent>, AQRef<AQSpiriteComponent> >(entity);
+				Renderer2D::DrawQuad(transform->GetTransform(), color->Color);
 			}
 
 			Renderer2D::EndScene();
 		}
 		//__________________________________________________-
 	}
+
+
 
 	void AQScene::OnViewportResize(AQUINT width, AQUINT height)
 	{
@@ -117,11 +132,56 @@ namespace Aquarius
 		AQRef<AQScene> scene = AQRef<AQScene>(this);
 		AQEntity entity = AQEntity(entt, scene);
 
-		entity.AddComponent<AQTransformComponent>(Eigen::Matrix4f().setIdentity());
+		entity.AddComponent<AQTransformComponent>();
 		entity.AddComponent<AQTagComponent>(name);
 
 		return entity;
 	}
 
+	void AQScene::DestroyEntity(AQEntity& entity)
+	{
+		m_Registry.destroy(entity);
+		entity.m_EntityHandle = entt::null;
+		entity.m_Scene = nullptr;
+	}
+	AQEntity AQScene::GetPrimaryCamera()
+	{
+		auto view = m_Registry.view<AQRef<AQCameraComponent>>();
+		for (auto entity : view)
+		{
+			const auto cameracomponent = view.get<AQRef<AQCameraComponent>>(entity);
+			if (cameracomponent->IsPrimary)
+			{
+				AQRef<AQScene > scene{ this };
+				return AQEntity{ entity , scene };
+			}	
+		}
+		return {};
+	}
+}
+namespace Aquarius
+{
+	template<typename ComponentType>
+	void AQScene::OnComponentAdded(AQEntity entity, AQRef<ComponentType>& component)
+	{
+		AQ_ASSERT(false,"AQScene::OnComponentAdded: Failed! Check to see AQScene.cpp!")
+	}
 
+	template<>
+	void AQScene::OnComponentAdded<AQTagComponent>(AQEntity entity, AQRef<AQTagComponent>& component)
+	{}
+	template<>
+	void AQScene::OnComponentAdded<AQTransformComponent>(AQEntity entity, AQRef<AQTransformComponent>& component)
+	{}
+	template<>
+	void AQScene::OnComponentAdded<AQCameraComponent>(AQEntity entity, AQRef<AQCameraComponent>& component)
+	{
+		component->Camera.SetViewportSize((float)m_ViewportWidth, (float)m_ViewportHeight);
+	}
+	template<>
+	void AQScene::OnComponentAdded<AQSpiriteComponent>(AQEntity entity, AQRef<AQSpiriteComponent>& component)
+	{}
+	template<>
+	void AQScene::OnComponentAdded<AQNativeScriptComponent>(AQEntity entity, AQRef<AQNativeScriptComponent>& component)
+	{}
 }

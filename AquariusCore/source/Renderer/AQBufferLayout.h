@@ -52,8 +52,8 @@ namespace Aquarius
 			case Aquarius::BufferDataType::Int4:		return  4;
 			case Aquarius::BufferDataType::Uint1:		return 1;
 			case Aquarius::BufferDataType::Uint2:    return  2;
-			case Aquarius::BufferDataType::Uint3:	return  3;
-			case Aquarius::BufferDataType::Uint4:	return  4;
+			case Aquarius::BufferDataType::Uint3:	    return  3;
+			case Aquarius::BufferDataType::Uint4:	    return  4;
 			case Aquarius::BufferDataType::Bool:		return 1;
 			default:break;
 			}
@@ -103,9 +103,9 @@ namespace Aquarius
 			case Aquarius::BufferDataType::Int4:		return GL_INT;
 			case Aquarius::BufferDataType::Uint1:		return GL_UNSIGNED_INT;
 			case Aquarius::BufferDataType::Uint2:    return GL_UNSIGNED_INT;
-			case Aquarius::BufferDataType::Uint3:	return GL_UNSIGNED_INT;
-			case Aquarius::BufferDataType::Uint4:	return GL_UNSIGNED_INT;
-			case Aquarius::BufferDataType::Bool:		return GL_BYTE;
+			case Aquarius::BufferDataType::Uint3:	    return GL_UNSIGNED_INT;
+			case Aquarius::BufferDataType::Uint4:	    return GL_UNSIGNED_INT;
+			case Aquarius::BufferDataType::Bool:		return GL_BOOL;
 			default:break;
 			}
 			AQ_ASSERT(false, "Unknown BufferDataType!")

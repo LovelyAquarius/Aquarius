@@ -4,7 +4,7 @@
 
 namespace Aquarius
 {
-	AQEntity::AQEntity(entt::entity& handle, AQRef<AQScene>& scene)
+	AQEntity::AQEntity(entt::entity handle, AQRef<AQScene>& scene)
 		:m_EntityHandle(handle),m_Scene(scene){}
 
 }

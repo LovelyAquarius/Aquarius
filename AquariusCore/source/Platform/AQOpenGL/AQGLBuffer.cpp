@@ -169,6 +169,7 @@ namespace Aquarius
 			for (auto& element : m_LinkedVBO->GetLayout().GetElements())
 			{
 				GLCALL(glVertexAttribPointer(element.BufferLocation, element.GetDimension(), element.GetGLType(), element.Normalized, m_LinkedVBO->GetLayout().GetStride(), (void*)element.Offset));
+				/*AQ_CORE_INFO("{0},{1},{2},{3}", element.BufferLocation, element.GetDimension(), element.GetGLType(), m_LinkedVBO->GetLayout().GetStride());*/
 			}
 			return true;
 		}

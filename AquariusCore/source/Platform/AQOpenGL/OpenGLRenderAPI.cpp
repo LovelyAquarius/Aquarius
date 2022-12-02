@@ -6,15 +6,22 @@
 
 namespace Aquarius
 {
+	Eigen::Vector2ui GlobalViewPortSize;
 	void OpenGLRenderAPI::Init()
 	{
+		
 		GLCALL(glEnable(GL_BLEND));
+		GLCALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		GLCALL(glEnable(GL_DEPTH_TEST));
-		GLCALL(glBlendFunc(GL_SRC1_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 	}
 	void OpenGLRenderAPI::SetViewport(AQUINT x, AQUINT y, AQUINT width, AQUINT height)
 	{
 		GLCALL(glViewport(x, y, width, height));
+		GlobalViewPortSize << width, height;
+	}
+	Eigen::Vector2ui OpenGLRenderAPI::GetViewport()
+	{
+		return GlobalViewPortSize;
 	}
 	void OpenGLRenderAPI::SetClearcolor(const Eigen::Vector4f& color)
 	{
@@ -24,6 +31,11 @@ namespace Aquarius
 	void OpenGLRenderAPI::Clear()
 	{
 		GLCALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+	}
+
+	void OpenGLRenderAPI::SetBlend()
+	{
+		/*GLCALL(glBlendFunc(GL_SRC1_ALPHA, GL_ONE_MINUS_SRC_ALPHA));*/
 	}
 
 	void OpenGLRenderAPI::DrawPointElement(const AQRef<AQVertexArray>& VAO, AQFLOAT pointsize, AQUINT elementcount)
@@ -42,7 +54,7 @@ namespace Aquarius
 	void OpenGLRenderAPI::DrawTriangleElement( const  AQRef<AQVertexArray>& VAO, AQUINT elementcount)
 	{
 	    GLCALL(glDrawElements(GL_TRIANGLES, elementcount, GL_UNSIGNED_INT, nullptr));
-		//GLCALL(glBindTexture(GL_TEXTURE_2D,0));？
+		GLCALL(glBindTexture(GL_TEXTURE_2D,0));
 	}
 
 	void OpenGLRenderAPI::DrawLineElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount, AQFLOAT width)
@@ -62,6 +74,23 @@ namespace Aquarius
 			GLCALL(glDrawElements(GL_LINE_STRIP, elementcounts[index], GL_UNSIGNED_INT, (void*)(offset * sizeof(AQUINT))));
 			offset += elementcounts[index];
 		}
+	}
+
+	void OpenGLRenderAPI::DrawBuffer(const AQRef<AQFrameBuffer>& FBO)
+	{
+
+		if (FBO->GetColorAttachments().size())
+		{
+			AQ_ASSERT(FBO->GetColorAttachments().size() <= 4, "FrameBuffer ColorAttachments>4 !");
+			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0,GL_COLOR_ATTACHMENT1 ,GL_COLOR_ATTACHMENT2 ,GL_COLOR_ATTACHMENT3 };
+			GLCALL(glDrawBuffers((GLsizei)FBO->GetColorAttachments().size(), buffers));
+		}
+		else if (FBO->GetColorAttachments().empty())
+		{
+			GLCALL(glDrawBuffer(GL_NONE));
+		}
+		GLCALL(AQ_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "OpenGLRenderAPI::DrawBuffer:Invalidate:Failed to Generate FrameBuffer!"));
+
 	}
 
 	void OpenGLRenderAPI::SetLineWidth(const AQFLOAT width)

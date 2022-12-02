@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene/ElementSystem/AQComponent.h"
-#include "MathSystem/AQEigen.h"
+#include "MathSystem/AQMathEx.h"
 
 namespace Aquarius
 {
@@ -9,24 +9,24 @@ namespace Aquarius
 	{
 	public:
 		static AQRef<AQTransformComponent> Create();
-		static AQRef<AQTransformComponent> Create(const Eigen::Matrix4f& transform, const std::string name);
-		static AQRef<AQTransformComponent> Create(const Eigen::Matrix4f& transform);
+		static AQRef<AQTransformComponent> Create(const Eigen::Vector3f& translation, const std::string name);
+		static AQRef<AQTransformComponent> Create(const Eigen::Vector3f& translation);
 
 
 
 	public:
 		virtual AQRef<AQObject> Copy();
-		operator const Eigen::Matrix4f& ()const;
-		operator  Eigen::Matrix4f ();
+		Eigen::Matrix4f GetTransform() const;
 
 	public:
-		Eigen::Matrix4f Transform;
-
+		Eigen::Vector3f Translation = {0.0f,0.0f,0.0f};
+		Eigen::Vector3f Rotation = { 0.0f,0.0f,0.0f };
+		Eigen::Vector3f Scale = { 1.0f,1.0f,1.0f };
 	protected:
 		AQTransformComponent();
 		AQTransformComponent(const AQTransformComponent& other);
-		AQTransformComponent(const Eigen::Matrix4f& transform,const std::string& name);
-		AQTransformComponent(const Eigen::Matrix4f& transform);
+		AQTransformComponent(const Eigen::Vector3f& translation,const std::string& name);
+		AQTransformComponent(const Eigen::Vector3f& translation);
 
 	private:
 

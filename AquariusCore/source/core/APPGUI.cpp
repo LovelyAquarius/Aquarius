@@ -1,8 +1,11 @@
 #include "AQPCH.h"
 #include "APPGUI.h"
 #include "Application.h"
+#include"Platform/AQOpenGL/GLError.h"
+#include"ImGuizmo.h"
 #include <GLFW/glfw3.h>
-
+#include<IconsFontAwesome/IconsFontAwesome6.h>
+#include<IMGUI/imgui_internal.h>
 namespace Aquarius
 {
 	void APPGUI::OnAttach()
@@ -17,7 +20,23 @@ namespace Aquarius
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;      
 
         ImGui::StyleColorsLight();
-        io.Fonts->AddFontFromFileTTF("G:/Mine/CppProjects/Aquarius/AquariusCore/source/Data/Fonts/msyh.ttc", 24.0f, 0, io.Fonts->GetGlyphRangesChineseFull());
+        const char* defaultfont = R"(.\source\Assets\Internal\Fonts\msyh.ttc)";
+        io.Fonts->AddFontFromFileTTF(defaultfont, 24.0f, 0, io.Fonts->GetGlyphRangesChineseFull());
+
+        static const ImWchar icon_ranges[] = 
+        { 0x23fb,0x23fb,
+          ICON_MIN_FA, ICON_MAX_FA, 0 
+        };
+
+        ImFontConfig config;
+        config.MergeMode = true;
+        config.GlyphMinAdvanceX = 24.0f;
+
+        const char* iconfont = R"(G:\Mine\CppProjects\Aquarius\Lyra\source\Assets\Internal\Icons\fa-regular-400.ttf)";
+        io.Fonts->AddFontFromFileTTF(iconfont, 24.0f, &config, icon_ranges);
+        io.Fonts->AddFontFromFileTTF("./source/Assets/Internal/Icons/fa-solid-900.ttf", 24.0f, &config, icon_ranges);
+
+
         ImGuiStyle& style = ImGui::GetStyle();
 
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -61,6 +80,8 @@ namespace Aquarius
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+        ImGui::GetCurrentContext()->NavWindowingToggleLayer = false;
     }
 
     void APPGUI::End()
@@ -92,8 +113,6 @@ namespace Aquarius
             event.m_Handled |= event.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
         }
 
-        EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<KeyPressedEvent>(AQ_BIND_EVENT_FN(APPGUI::OnSpaceButtonPressed));
     }
 
 

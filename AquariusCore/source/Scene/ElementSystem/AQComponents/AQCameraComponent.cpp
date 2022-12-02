@@ -36,7 +36,7 @@ namespace Aquarius
 	AQCameraComponent::AQCameraComponent(const Eigen::Matrix4f& projection, const std::string& name)
 		: Camera(projection)
 	{
-		AQ_INITIALIZE_AQOBJECT_NAME_AND_TYPE(name, AQColorComponent);
+		AQ_INITIALIZE_AQOBJECT_NAME_AND_TYPE(name, AQSpiriteComponent);
 	}
 
 	AQCameraComponent::AQCameraComponent(const Eigen::Matrix4f& projection)

@@ -108,8 +108,9 @@ namespace Aquarius
 
 	void AQGLTexture2D::BindSlot(GLuint textureslot)
 	{
-		GLCALL(glActiveTexture(GL_TEXTURE0 + textureslot));
-		GLCALL(glBindTexture(GL_TEXTURE_2D, m_Texture));
+		GLCALL(glBindTextureUnit(textureslot, m_Texture));
+		//GLCALL(glActiveTexture(GL_TEXTURE0 + textureslot));
+		//GLCALL(glBindTexture(GL_TEXTURE_2D, m_Texture));
 	}
 
 	void AQGLTexture2D::LoadFile(const char* filepath)

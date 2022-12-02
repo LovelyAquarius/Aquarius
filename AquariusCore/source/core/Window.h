@@ -12,8 +12,8 @@ namespace Aquarius
 		AQUINT Height;
 
 		WindowConfigs(const std::string& title = "Aquarius",
-			AQUINT width = 1280,
-			AQUINT height = 720)
+			AQUINT width = 1600,
+			AQUINT height = 900)
 			:Title(title), Width(width), Height(height) {}
 	};
 

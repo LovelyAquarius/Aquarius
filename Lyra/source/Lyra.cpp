@@ -1,3 +1,4 @@
+#include "LyraPCH.h"
 #include "LyraEditor.h"
 //程序入口
 #include "core/entrypoint.h"
@@ -10,6 +11,7 @@ public:
 		:Application("Lyra Editor")
 	{
 		PushOverLay(new Aquarius::LyraEditor());
+		
 	}
 
 	~Lyra()

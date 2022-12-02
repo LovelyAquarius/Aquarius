@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 
 	auto myapp = Aquarius::CreateApplication();
 	myapp->Run();
-
+	
 }
 
 

@@ -12,7 +12,7 @@ namespace Aquarius
 		static AQRef<AQCameraComponent> Create();
 	public:
 		AQSceneCamera Camera;
-		AQBOOL IsPrimary = true;
+		AQBOOL IsPrimary = false;
 		AQBOOL FixedAspectRatio = false;
 	public:
 		virtual AQRef<AQObject> Copy();

@@ -7,8 +7,13 @@ bin-inter/
 *.sln
 Aquarius/*.vcxproj
 Aquarius/*.user
+Aquarius/*.filters
+Lyra/*.vcxproj
+Lyra/*.user
+Lyra/*.filters
 AquariusCore/*.vcxproj
 AquariusCore/*.user
+AquariusCore/*.filters
 *.vcxproj
 *.user
 git

@@ -1,6 +1,8 @@
 #pragma once
 #include "Aquarius.h"
 #include "Pannels/LyraSceneHierarchy.h"
+#include "Pannels/LyraContentBrowser.h"
+#include "Renderer/EditorCamera.h"
 #include "Utils/AQFont/AQTextImage.h"
 
 namespace Aquarius
@@ -9,8 +11,10 @@ namespace Aquarius
 	class  LyraEditor :public Layer
 	{
 	public:
-		LyraEditor();
 
+	public:
+		LyraEditor();
+		~LyraEditor();
 		virtual void OnAttach()override;
 		virtual void OnUpdate(DeltaTime& dt)override;
 		virtual void	 OnRender(DeltaTime& dt)override;
@@ -24,28 +28,40 @@ namespace Aquarius
 		void ImguiDocking(bool* p_open);
 		//独立事件
 		bool OnKeyPressed(KeyPressedEvent& event);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
 		bool OnWindowResize(WindowResizeEvent& event);
+		void Openfile();
+		void Savefileas();
 	private:
+		//主要附件
+		static Translation s_Translation;
 		LayerStack m_LayerStack;
-		//一些附件
+		LyraSceneHierarchy* m_SceneHierarchy;
+		LyraContentBrowser* m_ContentBrowser;
+		EditorCamera m_EditorCamera;
+		EditorCamera m_StaticCamera;
+		AQINT m_GuizmoType = 7;
 		AQShaderLibrary m_Shaderlib;
 		AQParticcle2D m_Particle2D;
 		AQParticcle2D::ParticleProperties m_ParticleSetting;
-		AQEntity m_SquareEntity;
-		AQEntity m_CameraEntity;
+
 		//___________________________________
-		//Framebuffer
+		// 视窗属性
 		AQRef<AQFrameBuffer> m_FrameBuffer;
-		Eigen::Vector2f m_ViewportSize;
 		AQBOOL m_ViewportFocused = false;
 		AQBOOL m_ViewportHovered = false;
-
-		// ————————————————————————————————————————
+		Eigen::Vector2f m_ViewportSize;
+		Eigen::Vector2f m_ViewportBounds[2];
+		AQEntity m_HoveredEntity;
+		// __________________________________
 		//camera相关属性
 		OrthgraphicCameraController m_CameraController;
 		//_______________________
 		// 场景
-		AQRef<AQScene> m_ActiveScene;
+		AQRef<AQScene> m_BackScene;//总背景
+		AQEntity m_SquareEntity;
+		AQEntity m_BackCamera;
+		AQRef<AQScene> m_ActiveScene;//视窗场景
 		// ————————————————————————————————————
 		//物体相关属性
 		glm::vec3 m_Object_1_position;

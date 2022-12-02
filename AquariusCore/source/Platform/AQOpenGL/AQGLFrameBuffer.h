@@ -18,18 +18,23 @@ namespace Aquarius
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
-		virtual void Delete()const override;
+		virtual void Delete() override;
 
-		virtual AQUINT GetID() override { return m_ColorAttachment;}
+		virtual const std::vector<AQUINT>& GetColorAttachments() const override { return m_ColorAttachments; }
+		virtual AQUINT GetColorAttachmentID(AQUINT index) const override { AQ_ASSERT(index<m_ColorAttachments.size(),"GetColorAttatchmentID:index is too large!"); return m_ColorAttachments[index]; }
 		virtual const AQFrameBufferConfiguration& GetConfiguration()const override { return m_Configuration; }
-		
+		virtual AQINT ReadPixel(AQUINT attachmentindex, AQINT x, AQINT y)override;
+		virtual Eigen::Vector4f ReadPixelRGBA(AQUINT attachmentindex, AQINT x, AQINT y)override;
+		virtual void ClearAttachment(AQUINT attachmentindex, int value) override;
+
 		virtual void Resize(AQUINT width, AQUINT height)override;
 		
 		
 		GLuint GetFBO() { return m_FBO; }
 		void Invalidate();
 
-
+	private:
+		void Updateformat(const AQFrameBufferConfiguration& config);
 
 	protected:
 		AQGLFrameBuffer(const AQFrameBufferConfiguration& config);
@@ -37,8 +42,13 @@ namespace Aquarius
 	private:
 		AQFrameBufferConfiguration m_Configuration;
 		GLuint m_FBO;
-		GLuint m_ColorAttachment;
-		GLuint m_DepthAttachment;
+
+		std::vector<GLuint> m_ColorAttachments;
+		std::vector<FrameBufferTextureConfiguration> m_ColorAttachmentsConfig;
+
+
+		GLuint m_DepthAttachment =0;
+		FrameBufferTextureConfiguration m_DepthAttachmentConfig;
 	};
 
 }

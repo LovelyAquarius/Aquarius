@@ -10,15 +10,17 @@ namespace Aquarius
 	public:
 		virtual void Init()override;
 		virtual void SetViewport(AQUINT x, AQUINT y, AQUINT width, AQUINT height)override;
+		virtual Eigen::Vector2ui GetViewport() override;
 		virtual void SetClearcolor(const Eigen::Vector4f& color) override;
 		virtual void Clear()override;
+		virtual void SetBlend() override;
 
 		virtual void DrawPointElement(const AQRef<AQVertexArray>& VAO, AQFLOAT pointsize, AQUINT elementcount = 0) override;
 		virtual void DrawPointElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount = 0) override;
 		virtual void DrawTriangleElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount = 0)override;
 		virtual void DrawLineElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount = 0, AQFLOAT width = 5.0f)override;
 		virtual void DrawLineElement(const AQRef<AQVertexArray>& VAO,const std::vector<AQUINT>& elementcount, AQFLOAT width = 5.0f)override;
-		
+		virtual void DrawBuffer(const AQRef<AQFrameBuffer>& FBO) override;
 		virtual void SetLineWidth(const AQFLOAT width) override;
 	};
 

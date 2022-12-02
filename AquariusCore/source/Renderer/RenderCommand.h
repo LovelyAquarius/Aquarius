@@ -19,7 +19,7 @@ namespace Aquarius
 		inline static void DrawTriangleElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount=0);
 		inline static void DrawLineElement(const AQRef<AQVertexArray>& VAO, AQUINT elementcount = 0, AQFLOAT width = 5.0f);
 		inline static void DrawLineElement(const AQRef<AQVertexArray>& VAO, const std::vector<AQUINT>& elementcounts, AQFLOAT width = 5.0f);
-
+		inline static void DrawBuffer(const AQRef<AQFrameBuffer>& FBO);
 		inline static void SetLineWidth(const AQFLOAT width);
 	private:
 		static RenderAPI* s_RenderAPI;
@@ -77,6 +77,13 @@ namespace Aquarius
 	{
 		VAO->Bind();
 		s_RenderAPI->DrawLineElement(VAO, elementcounts, width);
+	}
+
+	inline void RenderCommand::DrawBuffer(const AQRef<AQFrameBuffer>& FBO)
+	{
+		FBO->Bind();
+		s_RenderAPI->DrawBuffer(FBO);
+		FBO->UnBind();
 	}
 
 	inline void RenderCommand::SetLineWidth(const AQFLOAT width)

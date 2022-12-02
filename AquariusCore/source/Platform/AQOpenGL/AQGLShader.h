@@ -1,14 +1,13 @@
 #pragma once
-#include "core/AquariusCore.h"
 #include "Renderer/AQShader.h"
-#include <GLAD/glad.h>
+#include<GLAD/glad.h>
 
 
 
 
 namespace Aquarius
 {
-	class AQUARIUS_API AQGLShader : public AQShader
+	class  AQGLShader : public AQShader
 	{
 	public:
 		static AQRef<AQShader>  Create(const std::string& name, const char* filepath);
@@ -24,7 +23,7 @@ namespace Aquarius
 		virtual void Bind()const override;
 		virtual void UnBind()const override;
 		virtual void Delete()const override;
-
+		virtual AQUINT GetId() const override { return m_ShaderProgram; };
 		virtual void SetValue(const std::string& name, AQINT value) const override;
 		virtual void SetValue(const std::string& name, AQINT* values, AQUINT count) const override;
 		virtual void SetValue(const std::string& name, AQFLOAT value) const override;

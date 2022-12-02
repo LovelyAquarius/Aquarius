@@ -2,7 +2,7 @@
 #include "core/AquariusCore.h"
 #include "core/AQObject.h"
 
-#include "MathSystem/AQEigen.h"
+#include "MathSystem/AQMathEx.h"
 
 namespace Aquarius
 {
@@ -22,6 +22,7 @@ namespace Aquarius
 		virtual void UnBind() const = 0;
 		virtual void Delete()const = 0;
 
+		virtual AQUINT GetId() const = 0;
 		virtual void SetValue(const std::string& name, AQINT value) const = 0;
 		virtual void SetValue(const std::string& name, AQINT* values, AQUINT count) const = 0;
 		virtual void SetValue(const std::string& name, AQFLOAT value) const=0;

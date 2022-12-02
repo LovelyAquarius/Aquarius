@@ -10,17 +10,7 @@
 #include <GLM/gtc/type_ptr.hpp>
 #include <GLM/gtc/constants.hpp>
 #include <GLM/gtx/compatibility.hpp>
-namespace Aquarius
-{
-	AQFLOAT AQ_DegreeToRadian(AQFLOAT degrees);
-	AQFLOAT AQ_Lerp(const AQFLOAT f1, const AQFLOAT f2, AQFLOAT t);
-	Eigen::Vector3f AQ_Lerp(const Eigen::Vector3f vec1, const Eigen::Vector3f vec2, AQFLOAT t);
-	Eigen::Vector4f AQ_Lerp(const Eigen::Vector4f vec1, const Eigen::Vector4f vec2, AQFLOAT t);
-	Eigen::Matrix4f AQ_Ortho(AQFLOAT left, AQFLOAT right, AQFLOAT bottom, AQFLOAT top, AQFLOAT znear, AQFLOAT zfar);
-	Eigen::Matrix4f AQ_Perspective(float fovy, float aspect, float znear, float zfar);
-	Eigen::Matrix4f& AQ_Scale_Self(Eigen::Matrix4f& mat, Eigen::Vector3f scale);
-	const AQFLOAT AQ_Pi_float();
-}
+
 namespace Aquarius
 {
 	void AQ_Do_Nothing();
@@ -30,7 +20,7 @@ namespace Aquarius
 
 	std::wstring AQ_UTF8ToUnicode(const std::string& str);
 	void AQ_UTF8ToUnicode(const char* u8str,char* unicodestr);
-
+	std ::string AQ_UnicodeToUTF8(const std::wstring& unicodestr);
 
 
 	Eigen::Vector3f CalculateBezierPosition(const Eigen::Vector3f& start, const Eigen::Vector3f& end, const Eigen::Vector3f& controller, AQFLOAT t);

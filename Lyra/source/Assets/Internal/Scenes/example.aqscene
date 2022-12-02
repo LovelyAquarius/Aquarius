@@ -1,0 +1,48 @@
+Scene: Unnamed Scene
+Entities:
+  - Entity: 1234567
+    TagComponent:
+      Tag: square3
+    TransformComponent:
+      Translation: [-0.347385526, 0.0906674042, 0.614910722]
+      Rotation: [0.785398245, -0.785398245, 3.57627925e-07]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.157177851, 0.27189061, 0.825737238, 1]
+  - Entity: 1234567
+    TagComponent:
+      Tag: square2
+    TransformComponent:
+      Translation: [1.32868692e-07, 0.699103773, 0.69910413]
+      Rotation: [2.35619497, -2.10734132e-08, 0.785398245]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.884718478, 0.0901321769, 0.0901321769, 1]
+  - Entity: 1234567
+    TagComponent:
+      Tag: maincamera
+    TransformComponent:
+      Translation: [-0.103981018, -0.0697975159, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFov: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+        AspectRatio: 0.831730783
+      IsPrimary: true
+      FixedAspectRatio: false
+  - Entity: 1234567
+    TagComponent:
+      Tag: square1
+    TransformComponent:
+      Translation: [0.352766573, 0.102765076, 0.603600025]
+      Rotation: [0.785398006, 0.785397887, 6.85453415e-07]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.203810826, 0.74530828, 0.279301018, 1]

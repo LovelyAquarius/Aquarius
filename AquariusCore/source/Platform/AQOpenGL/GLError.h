@@ -7,7 +7,7 @@ namespace Aquarius
 
 #ifdef AQ_DEBUG
 
-	#define GLASSERT(x)if(!(x)) __debugbreak()
+	#define GLASSERT(x) if(!(x)) __debugbreak()
 
 	#define GLCALL(x) GLClearError();\
 			x;\
@@ -22,7 +22,7 @@ namespace Aquarius
 
 	extern void  AQUARIUS_API GLClearError();
 	extern bool  AQUARIUS_API GLLog(const char* function, const char* file, int line);
-	
+	extern bool  AQUARIUS_API GLLog_Test(const char* function, const char* file, int line);
 }
 
 

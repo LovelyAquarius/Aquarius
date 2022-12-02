@@ -8,6 +8,10 @@
   <ItemGroup>
     <ClInclude Include="source\Aquarius.h" />
     <ClInclude Include="source\LyraEditor.h" />
+    <ClInclude Include="source\LyraPCH.h" />
+    <ClInclude Include="source\Pannels\LyraContentBrowser.h">
+      <Filter>Pannels</Filter>
+    </ClInclude>
     <ClInclude Include="source\Pannels\LyraSceneHierarchy.h">
       <Filter>Pannels</Filter>
     </ClInclude>
@@ -15,6 +19,10 @@
   <ItemGroup>
     <ClCompile Include="source\Lyra.cpp" />
     <ClCompile Include="source\LyraEditor.cpp" />
+    <ClCompile Include="source\LyraPCH.cpp" />
+    <ClCompile Include="source\Pannels\LyraContentBrowser.cpp">
+      <Filter>Pannels</Filter>
+    </ClCompile>
     <ClCompile Include="source\Pannels\LyraSceneHierarchy.cpp">
       <Filter>Pannels</Filter>
     </ClCompile>

@@ -1,0 +1,20 @@
+Scene: Unnamed Scene
+Entities:
+  - Entity: 1234567
+    TagComponent:
+      Tag: e2
+    TransformComponent:
+      Translation: [0.540000021, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.269534051, 0.670241296, 0.376962245, 1]
+  - Entity: 1234567
+    TagComponent:
+      Tag: e1
+    TransformComponent:
+      Translation: [-0.649999976, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    ColorComponent:
+      Color: [0.471849859, 0.103731073, 0.103731073, 1]

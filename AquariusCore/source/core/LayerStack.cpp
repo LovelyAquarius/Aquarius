@@ -40,7 +40,13 @@ namespace Aquarius
 
 
 	}
-
+	void LayerStack::DestroyLayers()
+	{
+		for (int i =0; i < m_Layers.size(); i++)
+		{
+			delete m_Layers[i];
+		}
+	}
 
 	void LayerStack::PopOverLay(Layer* overlay)
 	{

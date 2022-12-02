@@ -7,9 +7,10 @@ namespace Aquarius
 {
 	class AQUARIUS_API AQEntity
 	{
+		friend class AQScene;
 	public:
 		AQEntity() = default;
-		AQEntity(entt::entity& handle, AQRef<AQScene>& scene);
+		AQEntity(entt::entity handle, AQRef<AQScene>& scene);
 		AQEntity(const AQEntity& other)=default;
 	public:
 		//所有类型的组件均以AQRef的形式传入，ComponentType为组件类型（ComponentType不是Ref类型）
@@ -18,8 +19,9 @@ namespace Aquarius
 		template<typename ComponentType>	AQRef<ComponentType> GetComponent();
 		template<typename ComponentType>	bool HasComponent();
 	public:
-		operator bool()const {return m_EntityHandle != entt::null;}
+		operator bool()const {return m_EntityHandle != entt::null && m_Scene && m_Scene->m_Registry.valid(m_EntityHandle); }
 		operator AQUINT() const { return (AQUINT)m_EntityHandle; }
+		operator entt::entity() const { return m_EntityHandle; } 
 		AQBOOL operator ==(const AQEntity& other)const {return m_Scene != nullptr&&m_EntityHandle == other.m_EntityHandle && m_Scene == other.m_Scene;}
 		AQBOOL operator != (const AQEntity& other)const { return m_Scene == nullptr || m_EntityHandle != other.m_EntityHandle || m_Scene != other.m_Scene;}
 	private:
@@ -41,7 +43,9 @@ namespace Aquarius
 		}
 		else
 		{
-			return m_Scene->m_Registry.emplace<AQRef<ComponentType>>(m_EntityHandle, ComponentType::Create(std::forward<Args>(args)...));
+			AQRef<ComponentType> component = m_Scene->m_Registry.emplace<AQRef<ComponentType>>(m_EntityHandle, ComponentType::Create(std::forward<Args>(args)...));
+			m_Scene->OnComponentAdded<ComponentType>(*this, component);
+			return component;
 		}
 	}
 

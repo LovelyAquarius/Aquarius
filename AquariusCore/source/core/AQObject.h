@@ -22,14 +22,18 @@ namespace Aquarius
 		AQTexture = 50, AQTexture2D = 51, AQGLTexture2D=52,
 		AQSubTexture2D=60, AQGLSubTexture2D=61,
 		AQFrameBuffer =70, AQGLFrameBuffer=71,
+		AQUniformBuffer = 80, AQGLUniformBuffer =81,
 		//__________________________________________
 		//几何图形组件
 		AQQuadraticBezierCurve2D =100,
 		AQQuadraticBezierShape2D=110,
 
 		//__________________________________________
+		// RendererComponent
+		CommonCamera2DData = 200, CommonTexture2DData=201, QuadVertex2DData=201,
+		//________________________________________________
 		//基本元素
-		AQComponent=1000, AQTransformComponent=1001, AQTagComponent=1002, AQColorComponent=1003, AQCameraComponent=1004, AQNativeScriptComponent=1005,
+		AQComponent=1000, AQTransformComponent=1001, AQTagComponent=1002, AQSpiriteComponent=1003, AQCameraComponent=1004, AQNativeScriptComponent=1005,
 
 
 	};

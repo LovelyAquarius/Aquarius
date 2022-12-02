@@ -15,6 +15,8 @@ namespace Aquarius
 	public:
 
 		void SetContext(const AQRef<AQScene>& scene);
+		void SetSelectedEntity(AQEntity& entity);
+		AQEntity GetSelectedEntity() const { return m_Selection; }
 	private:
 		void DrawEntityNode(AQEntity entity);
 		void DrawProperties(AQEntity entity);

@@ -2,7 +2,7 @@
 #include "AQParticle2D.h"
 #include "core/Application.h"
 #include "core/RandomSystem.h"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer2D/Renderer2D.h"
 #include <math.h>
 
 namespace Aquarius

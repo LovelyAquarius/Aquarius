@@ -39,9 +39,9 @@ namespace Aquarius
 		PushOverLay(m_GUI);
 		//_______________________________________
 		// 初始化AQ工具
-		AQApplicationMonitor::Init();// 初始化监控器
-		PushOverLay(AQApplicationMonitor::s_Monitor);
-
+		//AQApplicationMonitor::Init();// 初始化监控器
+		/*PushOverLay(AQApplicationMonitor::s_Monitor);*/
+		m_LayerStack;
 		AQFontAPI::CreateAPI();
 		//_______________________________________
 		//初始化配置
@@ -73,12 +73,11 @@ namespace Aquarius
 
 
 
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); it)
+		for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
 		{
-			(*--it)->OnEvent(event);
-
 			if (event.m_Handled)
 				break;
+			(*it)->OnEvent(event);	
 		}
 	}
 
@@ -141,6 +140,11 @@ namespace Aquarius
 		}
 	}
 
+	void Application::Close()
+	{
+		Running = false;
+	}
+
 
 
 	bool Application::OnWindowClose(WindowCloseEvent& event)
@@ -156,7 +160,7 @@ namespace Aquarius
 		{Minlized = true; return false;}
 		//____________________________________
 		Minlized = false;
-		Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+		//Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
 		return false;
 	}
 

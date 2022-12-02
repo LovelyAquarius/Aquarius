@@ -19,7 +19,7 @@
 #include "Renderer/AQBuffer.h"
 #include "Renderer/AQFrameBuffer.h"
 #include "Renderer/Renderer.h"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer2D/Renderer2D.h"
 #include "Platform/AQOpenGL/AQGLTexture.h"
 #include "Data/3DObiects/MathModel/ThreeDModel.h"
 #include "imgui.h"
@@ -32,6 +32,7 @@
 // 功能组件
 #include "Renderer/ParticleSystem/AQParticle2D.h"
 #include "Utils/AQGeometry/AQEuclidian2D.h"
+#include "MathSystem/AQMathEx.h"
 // ————————————————————————————————————————————————————————
 
 
